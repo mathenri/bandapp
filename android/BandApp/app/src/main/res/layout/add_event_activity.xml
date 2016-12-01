@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RadioGroup
+        android:id="@+id/typeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:text="@string/add_event_type_label" >
+
+        <RadioButton
+            android:id="@+id/rehearsalRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/rehearsal_radio_button" />
+
+        <RadioButton
+            android:id="@+id/concertRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/concert_radio_button" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/locationEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/typeGroup"
+        android:layout_marginTop="14dp"
+        android:ems="10"
+        android:hint="@string/location_edit_text"
+        android:inputType="textShortMessage">
+        <requestFocus />
+    </EditText>
+
+    <!-- Time and Date -->
+
+    <TextView
+        android:id="@+id/timeAndDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/locationEditText"
+        android:layout_marginTop="25dp"
+        android:text="@string/time_and_date_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/dateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/timeAndDateLabel"
+        android:layout_marginTop="12dp"
+        android:text="@string/no_date_set" />
+
+    <TextView
+        android:id="@+id/timeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/timeAndDateLabel"
+        android:layout_marginTop="12dp"
+        android:text="@string/no_time_set" />
+
+    <Button
+        android:id="@+id/datePickerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/dateLabel"
+        android:text="@string/choose_date" />
+
+    <Button
+        android:id="@+id/timePickerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/datePickerButton"
+        android:layout_below="@id/timeLabel"
+        android:text="@string/choose_time" />
+
+    <!-- Buttons -->
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/cancel_button" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/submit_button" />
+
+</RelativeLayout>
