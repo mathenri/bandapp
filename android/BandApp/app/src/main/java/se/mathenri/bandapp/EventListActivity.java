@@ -33,6 +33,8 @@ public class EventListActivity extends ListActivity {
 
     private EventListAdapter adapter;
 
+    private ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +57,6 @@ public class EventListActivity extends ListActivity {
         adapter = new EventListAdapter(getApplicationContext());
         setListAdapter(adapter);
 
-        // request data from server
-//        Event rehearsal = new Event(Event.EventType.REHEARSAL, new Date(0), "The Basement");
-//        adapter.add(rehearsal);
-//        Event concert = new Event(Event.EventType.CONCERT, new Date(0), "The Church");
-//        adapter.add(concert);
-
         // start async taks that queries server for events and populates listview
         new GetEventsTask().execute();
     }
@@ -76,13 +72,10 @@ public class EventListActivity extends ListActivity {
 
     // queries the server for events and populates this activity's listview
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {
-        private static final String URL = "http://10.0.2.2:8080/api/events";
-        private static final int READ_TIMEOUT = 10000;
-        private static final int CONNECTION_TIMEOUT = 15000;
 
         @Override
         protected List<Event> doInBackground(Void... params) {
-            return queryServer();
+            return serverCommunicator.getEvents();
         }
 
         @Override
@@ -90,74 +83,5 @@ public class EventListActivity extends ListActivity {
             // populate list with fetched events
             adapter.add(events);
         }
-    }
-
-    private List<Event> queryServer() {
-
-        // get data from server
-        HttpURLConnection conn;
-        InputStream serverResponse;
-        try {
-            conn = initiateConnection();
-            serverResponse = conn.getInputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get response from server: " + e);
-            return null;
-        }
-
-        // translate data to JSON object
-        JSONArray eventsJson;
-        try {
-            eventsJson = inputStreamToJSON(serverResponse);
-        } catch (IOException | JSONException e) {
-            Log.e(TAG, "Failed to parse server response to JSON: " + e);
-            return null;
-        }
-
-        // translate JSON to list of event objects
-        return jsonToEventList(eventsJson);
-    }
-
-    private HttpURLConnection initiateConnection() throws IOException{
-        URL url = new URL(GetEventsTask.URL);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(GetEventsTask.READ_TIMEOUT);
-        conn.setConnectTimeout(GetEventsTask.CONNECTION_TIMEOUT);
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        conn.connect();
-        // int response = conn.getResponseCode();
-
-        return conn;
-    }
-
-    private JSONArray inputStreamToJSON(InputStream is) throws IOException, JSONException {
-        // input stream to JSONObject
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-        return new JSONArray(stringBuilder.toString());
-    }
-
-    private List<Event> jsonToEventList(JSONArray eventsJson) {
-        List<Event> events = new ArrayList<>();
-        for (int i = 0; i < eventsJson.length(); i++) {
-            try {
-                JSONObject eventJson = eventsJson.getJSONObject(i);
-                String type = eventJson.getString("type");
-                String location = eventJson.getString("location");
-                String date = eventJson.getString("date");
-                Event event = new Event(Event.EventType.valueOf(type), new Date(Long.parseLong(date)), location);
-                events.add(event);
-            } catch (JSONException e) {
-                Log.w(TAG, "Were not able to parse json item since one or more of the required " +
-                        "fields where missing! Discarding object. Exception: " + e);
-                continue;
-            }
-        }
-        return events;
     }
 }

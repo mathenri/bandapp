@@ -47,6 +47,7 @@ public class AddEventActivity extends Activity {
         dateView = (TextView) findViewById(R.id.dateLabel);
         timeView = (TextView) findViewById(R.id.timeLabel);
 
+        // define on click listeners
         final Button datePickerButton = (Button) findViewById(R.id.datePickerButton);
         datePickerButton.setOnClickListener(new OnClickListener() {
             @Override
