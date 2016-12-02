@@ -28,7 +28,6 @@ import java.util.List;
 
 public class EventListActivity extends ListActivity {
 
-    private static final int ADD_EVENT_REQUEST = 0;
     private static final String TAG = EventListActivity.class.getSimpleName();
 
     private EventListAdapter adapter;
@@ -50,7 +49,7 @@ public class EventListActivity extends ListActivity {
             public void onClick(View v) {
                 Intent startAddEventActivityIntent = new Intent(
                         EventListActivity.this, AddEventActivity.class);
-                startActivityForResult(startAddEventActivityIntent, ADD_EVENT_REQUEST);
+                startActivity(startAddEventActivityIntent);
             }
         });
 
@@ -61,21 +60,19 @@ public class EventListActivity extends ListActivity {
         new GetEventsTask().execute();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        // add newly created event
-        if (requestCode == ADD_EVENT_REQUEST && resultCode == RESULT_OK) {
-            adapter.add(new Event(data));
-        }
-    }
-
     // queries the server for events and populates this activity's listview
     private class GetEventsTask extends AsyncTask<Void, Void, List<Event>> {
 
         @Override
         protected List<Event> doInBackground(Void... params) {
-            return serverCommunicator.getEvents();
+            List<Event> events;
+            try {
+                events = serverCommunicator.getEvents();
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to get event list from server! Exception: " + e);
+                return null;
+            }
+            return events;
         }
 
         @Override

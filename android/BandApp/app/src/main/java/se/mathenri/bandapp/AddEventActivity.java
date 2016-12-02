@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -19,6 +21,7 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by MattiasHe on 2016-11-29.
@@ -33,6 +36,10 @@ public class AddEventActivity extends Activity {
 
     // declared static so that they can be accessed from the static picker-classes
     private static Calendar calendar;
+
+    private ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
+
+    private static final String TAG = AddEventActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +89,27 @@ public class AddEventActivity extends Activity {
                         Event.EventType.REHEARSAL : Event.EventType.CONCERT);
                 Date date = calendar.getTime();
                 String location = locationEditText.getText().toString();
-                Intent data = new Event(type, date, location).toIntent();
 
-                setResult(Activity.RESULT_OK, data);
+//                Intent data = new Event(type, date, location).toIntent();
+//                setResult(Activity.RESULT_OK, data);
+                new AddEventTask().execute(new Event(type, date, location));
                 finish();
             }
         });
+    }
+
+    // queries the server for events and populates this activity's listview
+    private class AddEventTask extends AsyncTask<Event, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Event... params) {
+            try {
+                serverCommunicator.addEvent(params[0]);
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to add event to server! Exception: " + e);
+            }
+            return null;
+        }
     }
 
     public static class DatePickerFragment extends DialogFragment implements

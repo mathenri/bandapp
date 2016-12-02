@@ -2,6 +2,9 @@ package se.mathenri.bandapp;
 
 import android.content.Intent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,6 +56,14 @@ public class Event {
         intent.putExtra(Event.DATE_KEY, this.date.getTime());
         intent.putExtra(Event.LOCATION_KEY, this.location);
         return intent;
+    }
+
+    public String toJson() throws JSONException{
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(Event.TYPE_KEY, this.type.toString());
+        jsonObject.put(Event.DATE_KEY, this.date.getTime()+"");
+        jsonObject.put(Event.LOCATION_KEY, this.location);
+        return jsonObject.toString();
     }
 
     public void addFikaResponsible(String person) {

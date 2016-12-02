@@ -9,7 +9,6 @@ var mongoose = require('mongoose');
 // setup body parser
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
 // setup database connection
 mongoose.connect('mongodb://localhost/band')
 
@@ -37,6 +36,8 @@ router.route('/events')
 
 	// create event
 	.post(function(req, res) {
+		console.log('Adding new event to database: ');
+		console.dir(req.body);
 
 		// create instance of the event model
 		var event = new Event();

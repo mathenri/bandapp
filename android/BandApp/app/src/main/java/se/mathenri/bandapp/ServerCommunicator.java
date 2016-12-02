@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,13 +23,15 @@ import java.util.List;
 
 public class ServerCommunicator {
 
-    private static final String URL = "http://10.0.2.2:8080/api/events";
+    private static final String SERVER_URL = "http://10.0.2.2:8080/api/events";
     private static final int READ_TIMEOUT = 10000;
     private static final int CONNECTION_TIMEOUT = 15000;
 
-    private static final ServerCommunicator instance = new ServerCommunicator();
+    private static final String HTTP_METHOD_GET = "GET";
+    private static final String HTTP_METHOD_POST = "POST";
 
-    private static final String TAG = EventListActivity.class.getSimpleName();
+    private static final ServerCommunicator instance = new ServerCommunicator();
+    private static final String TAG = ServerCommunicator.class.getSimpleName();
 
     private ServerCommunicator() {
         // private constructor to stop other classes from instantiating object (singelton)
@@ -38,41 +41,55 @@ public class ServerCommunicator {
         return instance;
     }
 
-    public List<Event> getEvents() {
+    public void addEvent(Event event) throws Exception {
+        Log.i(TAG, "Sending addEvent() request to server.");
+        sendRequest(HTTP_METHOD_POST, SERVER_URL, event.toJson());
+    }
+
+    public List<Event> getEvents() throws Exception {
+        Log.i(TAG, "Sending getEvents() request to server.");
 
         // get data from server
-        HttpURLConnection conn;
-        InputStream serverResponse;
-        try {
-            conn = initiateConnection();
-            serverResponse = conn.getInputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to get response from server: " + e);
-            return null;
-        }
+        HttpURLConnection conn = sendRequest(HTTP_METHOD_GET, SERVER_URL, null);
+        InputStream serverResponse = conn.getInputStream();
 
         // translate data to JSON object
-        JSONArray eventsJson;
-        try {
-            eventsJson = inputStreamToJSON(serverResponse);
-        } catch (IOException | JSONException e) {
-            Log.e(TAG, "Failed to parse server response to JSON: " + e);
-            return null;
-        }
+        JSONArray eventsJson = inputStreamToJSON(serverResponse);
 
         // translate JSON to list of event objects
         return jsonToEventList(eventsJson);
     }
 
-    private HttpURLConnection initiateConnection() throws IOException{
-        java.net.URL url = new URL(URL);
+    private HttpURLConnection sendRequest(String method, String urlString, String content)
+            throws IOException, UnexpectedResponseCodeException {
+        URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(READ_TIMEOUT);
         conn.setConnectTimeout(CONNECTION_TIMEOUT);
-        conn.setRequestMethod("GET");
+        conn.setRequestMethod(method);
+        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
         conn.setDoInput(true);
+        if (method == HTTP_METHOD_POST) {
+            conn.setDoOutput(true);
+        }
         conn.connect();
-        // int response = conn.getResponseCode();
+
+        if (content != null) {
+            // add content to http request
+
+            Log.i(TAG, "Sending content to server: " + content);
+            byte[] contentBytes = content.getBytes("UTF-8");
+            OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(contentBytes);
+            outputStream.close();
+        }
+
+        // if the server did not respond with a status code OK, throw exception
+        int responseCode = conn.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new UnexpectedResponseCodeException(responseCode + "");
+        }
 
         return conn;
     }
