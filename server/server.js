@@ -1,10 +1,12 @@
 // server.js
 
 // import packages
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
+var express = require('express'),
+	app = express(),
+	bodyParser = require('body-parser'),
+	mongoose = require('mongoose'),
+	winston = require('winston'),
+	expressWinston = require('express-winston');
 
 // setup body parser
 app.use(bodyParser.urlencoded({extended: true}));
@@ -102,6 +104,19 @@ router.route('/events/:event_id')
 			res.json({ message: 'Successfully deleted'});
 		});
 	});
+
+// logging middleware
+app.use(expressWinston.logger({
+	transports: [
+		new winston.transports.Console({
+			json: true,
+			colorize: true
+		})
+	],
+	meta: true, // log the meta data about the request
+	expressFormat: true, // default message format
+	colorize: true, // colors on message
+}));
 
 // prefix all routes with /api
 app.use('/api', router);
