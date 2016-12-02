@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 
@@ -26,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EventListActivity extends ListActivity {
+public class EventListActivity extends AppCompatActivity {
 
     private static final String TAG = EventListActivity.class.getSimpleName();
 
@@ -37,13 +41,15 @@ public class EventListActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_event_list);
 
         // add footer
-        getListView().setFooterDividersEnabled(true);
+        ListView eventListView = (ListView) findViewById(R.id.event_list_view);
+        eventListView.setFooterDividersEnabled(true);
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         TextView footerView = (TextView) inflater.inflate(R.layout.footer_view, null);
-        getListView().addFooterView(footerView);
+        eventListView.addFooterView(footerView);
         footerView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +60,7 @@ public class EventListActivity extends ListActivity {
         });
 
         adapter = new EventListAdapter(getApplicationContext());
-        setListAdapter(adapter);
+        eventListView.setAdapter(adapter);
 
         // start async taks that queries server for events and populates listview
         new GetEventsTask().execute();

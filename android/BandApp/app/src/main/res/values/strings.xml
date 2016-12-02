@@ -13,4 +13,6 @@
     <string name="cancel_button">Cancel</string>
     <string name="submit_button">Submit</string>
     <string name="title_activity_add_event">AddEvent</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="title_activity_event_manager">EventManagerActivity</string>
 </resources>
