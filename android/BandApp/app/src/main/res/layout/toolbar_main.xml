@@ -1,0 +1,13 @@
+<!--The Material Design specification recommends that app bars have an elevation of 4 dp.-->
+<android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar_main"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    app:titleTextColor="@android:color/white"
+    android:background="?attr/colorPrimary"
+    android:elevation="4dp"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
+

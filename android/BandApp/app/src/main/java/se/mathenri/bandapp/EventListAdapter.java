@@ -53,6 +53,10 @@ public class EventListAdapter extends BaseAdapter {
         return position;
     }
 
+    public void clear() {
+        this.events.clear();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Event event = events.get(position);
