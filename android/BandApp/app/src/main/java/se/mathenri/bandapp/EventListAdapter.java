@@ -74,7 +74,7 @@ public class EventListAdapter extends BaseAdapter {
         typeView.setText(event.getType().toString());
 
         TextView dateView = (TextView) eventLayout.findViewById(R.id.eventListItemDate);
-        dateView.setText(new SimpleDateFormat("yyyy-MM-dd").format(event.getDate()));
+        dateView.setText(event.getDateString());
 
         TextView locationView = (TextView) eventLayout.findViewById(R.id.eventListItemLocation);
         locationView.setText(event.getLocation());

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
@@ -37,6 +38,16 @@ public class EventListActivity extends AppCompatActivity {
         ListView eventListView = (ListView) findViewById(R.id.event_list_view);
         adapter = new EventListAdapter(getApplicationContext());
         eventListView.setAdapter(adapter);
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event eventToView = (Event) adapter.getItem(position);
+                Intent startViewEventActivityIntent = eventToView.toIntent();
+                startViewEventActivityIntent.setClass(
+                        EventListActivity.this, ViewEventActivity.class);
+                startActivity(startViewEventActivityIntent);
+            }
+        });
 
         new GetEventsTask().execute();
     }

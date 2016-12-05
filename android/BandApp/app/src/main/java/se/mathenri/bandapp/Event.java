@@ -21,6 +21,8 @@ public class Event {
         REHEARSAL, CONCERT
     }
 
+    private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
     // keys used to identify event fields when encapsulated in an Intent
     private static final String TYPE_KEY = "type";
     private static final String DATE_KEY = "date";
@@ -84,6 +86,10 @@ public class Event {
 
     public Date getDate() {
         return date;
+    }
+
+    public String getDateString() {
+        return DEFAULT_DATE_FORMAT.format(date);
     }
 
     public String getLocation() {
