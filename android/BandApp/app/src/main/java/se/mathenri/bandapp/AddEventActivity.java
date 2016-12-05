@@ -56,7 +56,6 @@ public class AddEventActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-
         calendar = Calendar.getInstance();
 
         // get references to views
@@ -103,7 +102,7 @@ public class AddEventActivity extends AppCompatActivity {
 
 //                Intent data = new Event(type, date, location).toIntent();
 //                setResult(Activity.RESULT_OK, data);
-                new AddEventTask().execute(new Event(type, date, location));
+                new AddEventTask().execute(new Event(type, date, location, null));
                 finish();
             }
         });

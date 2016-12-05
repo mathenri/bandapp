@@ -29,9 +29,16 @@ public class ServerCommunicator {
 
     private static final String HTTP_METHOD_GET = "GET";
     private static final String HTTP_METHOD_POST = "POST";
+    private static final String HTTP_METHOD_DELETE = "DELETE";
 
     private static final ServerCommunicator instance = new ServerCommunicator();
     private static final String TAG = ServerCommunicator.class.getSimpleName();
+
+    private static final String DATABASE_ID_FIELD = "_id";
+    private static final String DATABASE_TYPE_FIELD = "type";
+    private static final String DATABASE_LOCATION_FIELD = "location";
+    private static final String DATABASE_DATE_FILED = "date";
+
 
     private ServerCommunicator() {
         // private constructor to stop other classes from instantiating object (singelton)
@@ -46,21 +53,20 @@ public class ServerCommunicator {
         sendRequest(HTTP_METHOD_POST, SERVER_URL, event.toJson());
     }
 
+    public void deleteEvent(Event event) throws Exception {
+        Log.i(TAG, "Sending deleteEvent() request to server");
+        sendRequest(HTTP_METHOD_DELETE, SERVER_URL + "/" + event.getDataBaseId(), null);
+    }
+
     public List<Event> getEvents() throws Exception {
         Log.i(TAG, "Sending getEvents() request to server.");
 
         // get data from server
-        HttpURLConnection conn = sendRequest(HTTP_METHOD_GET, SERVER_URL, null);
-        InputStream serverResponse = conn.getInputStream();
-
-        // translate data to JSON object
-        JSONArray eventsJson = inputStreamToJSON(serverResponse);
-
-        // translate JSON to list of event objects
-        return jsonToEventList(eventsJson);
+        String response = sendRequest(HTTP_METHOD_GET, SERVER_URL, null);
+        return createEventList(response);
     }
 
-    private HttpURLConnection sendRequest(String method, String urlString, String content)
+    private String sendRequest(String method, String urlString, String content)
             throws IOException, UnexpectedResponseCodeException {
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -91,10 +97,11 @@ public class ServerCommunicator {
             throw new UnexpectedResponseCodeException(responseCode + "");
         }
 
-        return conn;
+        InputStream responseInputStream = conn.getInputStream();
+        return inputStreamToString(responseInputStream);
     }
 
-    private JSONArray inputStreamToJSON(InputStream is) throws IOException, JSONException {
+    private String inputStreamToString(InputStream is) throws IOException {
         // input stream to JSONObject
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
         StringBuilder stringBuilder = new StringBuilder();
@@ -102,18 +109,21 @@ public class ServerCommunicator {
         while ((line = bufferedReader.readLine()) != null) {
             stringBuilder.append(line);
         }
-        return new JSONArray(stringBuilder.toString());
+        return stringBuilder.toString();
     }
 
-    private List<Event> jsonToEventList(JSONArray eventsJson) {
+    private List<Event> createEventList(String eventsString) throws JSONException{
+        JSONArray eventsJson = new JSONArray(eventsString);
         List<Event> events = new ArrayList<>();
         for (int i = 0; i < eventsJson.length(); i++) {
             try {
                 JSONObject eventJson = eventsJson.getJSONObject(i);
-                String type = eventJson.getString("type");
-                String location = eventJson.getString("location");
-                String date = eventJson.getString("date");
-                Event event = new Event(Event.EventType.valueOf(type), new Date(Long.parseLong(date)), location);
+                String databaseId = eventJson.getString(DATABASE_ID_FIELD);
+                String type = eventJson.getString(DATABASE_TYPE_FIELD);
+                String location = eventJson.getString(DATABASE_LOCATION_FIELD);
+                String date = eventJson.getString(DATABASE_DATE_FILED);
+                Event event = new Event(Event.EventType.valueOf(type),
+                        new Date(Long.parseLong(date)), location, databaseId);
                 events.add(event);
             } catch (JSONException e) {
                 Log.w(TAG, "Were not able to parse json item since one or more of the required " +

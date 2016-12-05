@@ -27,7 +27,9 @@ public class Event {
     private static final String TYPE_KEY = "type";
     private static final String DATE_KEY = "date";
     private static final String LOCATION_KEY = "location";
+    private static final String DATABASE_ID_KEY = "id";
 
+    private String dataBaseId;
     private EventType type;
     private Date date;
     private String location;
@@ -35,7 +37,8 @@ public class Event {
     private List<String> prayerReponsible = new ArrayList<>();
     private List<String> absent = new ArrayList<>();
 
-    public Event(EventType type, Date date, String location) {
+    public Event(EventType type, Date date, String location, String dataBaseId) {
+        this.dataBaseId = dataBaseId;
         this.type = type;
         this.date = date;
         this.location = location;
@@ -45,7 +48,7 @@ public class Event {
      * Creates an Event object from an Intent (passed between Activities)
      */
     public Event(Intent intent) {
-
+        this.dataBaseId = intent.getStringExtra(Event.DATABASE_ID_KEY);
         this.type = (EventType) intent.getSerializableExtra(Event.TYPE_KEY);
         this.date = new Date(intent.getLongExtra(Event.DATE_KEY, -1));
         this.location = intent.getStringExtra(Event.LOCATION_KEY);
@@ -54,6 +57,7 @@ public class Event {
     // Encapsulates the Event in an Intent object and returns it
     public Intent toIntent() {
         Intent intent = new Intent();
+        intent.putExtra(Event.DATABASE_ID_KEY, this.dataBaseId);
         intent.putExtra(Event.TYPE_KEY, this.type);
         intent.putExtra(Event.DATE_KEY, this.date.getTime());
         intent.putExtra(Event.LOCATION_KEY, this.location);
@@ -95,4 +99,15 @@ public class Event {
     public String getLocation() {
         return location;
     }
+
+    public String getDataBaseId() {
+        if (dataBaseId == null) {
+            throw new IllegalStateException("The database id for this Event has not been set! " +
+                    "Has it been added to the database?");
+        } else {
+            return dataBaseId;
+        }
+    }
+
+    public void setDataBaseId(String id) { this.dataBaseId = id; }
 }
