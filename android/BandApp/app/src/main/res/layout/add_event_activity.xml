@@ -97,6 +97,19 @@
             android:layout_below="@id/timeLabel"
             android:text="@string/choose_time" />
 
+        <EditText
+            android:id="@+id/durationEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/typeGroup"
+            android:layout_marginTop="14dp"
+            android:ems="10"
+            android:hint="@string/location_edit_text"
+            android:inputType="textShortMessage">
+            <requestFocus />
+        </EditText>
+
         <!-- Buttons -->
 
         <Button

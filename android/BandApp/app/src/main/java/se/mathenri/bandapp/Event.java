@@ -108,6 +108,4 @@ public class Event {
             return dataBaseId;
         }
     }
-
-    public void setDataBaseId(String id) { this.dataBaseId = id; }
 }

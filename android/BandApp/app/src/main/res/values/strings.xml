@@ -5,7 +5,8 @@
     <string name="rehearsal_radio_button">Rehearsal</string>
     <string name="concert_radio_button">Concert</string>
     <string name="location_edit_text">Enter location...</string>
-    <string name="time_and_date_label">Pick a date</string>
+    <string name="time_and_date_label">Start time</string>
+    <string name="end_time_label">End time</string>
     <string name="no_date_set">No date set</string>
     <string name="no_time_set">No time set</string>
     <string name="choose_date">Choose a date</string>
@@ -14,8 +15,14 @@
     <string name="submit_button">Submit</string>
     <string name="title_activity_add_event">Add new event</string>
     <string name="title_activity_view_event">View event</string>
+    <string name="title_activity_event_list">Event list</string>
+    <string name="title_activity_add_user_name">New user name</string>
+    <string name="title_activity_edit_user_name">New user name</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_add">Add</string>
     <string name="action_delete">Delete</string>
+    <string name="action_edit_username">Edit username</string>
+    <string name="add_user_name_label">Add a new user name:</string>
+    <string name="edit_user_name_label">Edit user name:</string>
     <string name="title_activity_event_manager">EventManagerActivity</string>
 </resources>

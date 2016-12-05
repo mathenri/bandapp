@@ -37,7 +37,7 @@ public class ServerCommunicator {
     private static final String DATABASE_ID_FIELD = "_id";
     private static final String DATABASE_TYPE_FIELD = "type";
     private static final String DATABASE_LOCATION_FIELD = "location";
-    private static final String DATABASE_DATE_FILED = "date";
+    private static final String DATABASE_DATE_FIELD = "date";
 
 
     private ServerCommunicator() {
@@ -121,7 +121,7 @@ public class ServerCommunicator {
                 String databaseId = eventJson.getString(DATABASE_ID_FIELD);
                 String type = eventJson.getString(DATABASE_TYPE_FIELD);
                 String location = eventJson.getString(DATABASE_LOCATION_FIELD);
-                String date = eventJson.getString(DATABASE_DATE_FILED);
+                String date = eventJson.getString(DATABASE_DATE_FIELD);
                 Event event = new Event(Event.EventType.valueOf(type),
                         new Date(Long.parseLong(date)), location, databaseId);
                 events.add(event);

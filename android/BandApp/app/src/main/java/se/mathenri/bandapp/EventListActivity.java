@@ -70,6 +70,11 @@ public class EventListActivity extends AppCompatActivity {
                 new GetEventsTask().execute();
                 return true;
 
+            case R.id.action_edit_username:
+                Intent startEditUserNameActivity = new Intent(
+                        EventListActivity.this, EditUserNameActivity.class);
+                startActivity(startEditUserNameActivity);
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
