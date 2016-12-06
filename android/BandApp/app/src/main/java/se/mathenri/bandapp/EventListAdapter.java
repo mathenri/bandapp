@@ -1,14 +1,15 @@
 package se.mathenri.bandapp;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,11 +63,11 @@ public class EventListAdapter extends BaseAdapter {
         Event event = events.get(position);
 
         // create list view
-        RelativeLayout eventLayout = (RelativeLayout) convertView;
+        LinearLayout eventLayout = (LinearLayout) convertView;
         if (eventLayout == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            eventLayout = (RelativeLayout) layoutInflater.inflate(R.layout.event_list_item, null);
+            eventLayout = (LinearLayout) layoutInflater.inflate(R.layout.event_list_item, null);
         }
 
         // fill in data
@@ -78,6 +79,16 @@ public class EventListAdapter extends BaseAdapter {
 
         TextView locationView = (TextView) eventLayout.findViewById(R.id.eventListItemLocation);
         locationView.setText(event.getLocation());
+
+        if (!event.getFoodResponsible().isEmpty()) {
+            TextView foodResponsibleTextView = new TextView(context);
+            foodResponsibleTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            foodResponsibleTextView.setText(
+                    "Food: " + TextUtils.join(", ", event.getFoodResponsible()));
+            LinearLayout layout = (LinearLayout) eventLayout.findViewById(R.id.eventListItem);
+            layout.addView(foodResponsibleTextView);
+        }
 
         return eventLayout;
     }

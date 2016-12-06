@@ -6,10 +6,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ViewEventActivity extends AppCompatActivity {
@@ -43,6 +45,17 @@ public class ViewEventActivity extends AppCompatActivity {
 
         TextView locationTextView = (TextView) findViewById(R.id.view_event_location);
         locationTextView.setText(event.getLocation());
+
+        // add food responsible if there are any
+        if (!event.getFoodResponsible().isEmpty()) {
+            TextView foodResponsibleTextView = new TextView(this);
+            foodResponsibleTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            foodResponsibleTextView.setText(
+                    "Food: " + TextUtils.join(", ", event.getFoodResponsible()));
+            LinearLayout layout = (LinearLayout) findViewById(R.id.activity_view_event);
+            layout.addView(foodResponsibleTextView);
+        }
     }
 
     @Override

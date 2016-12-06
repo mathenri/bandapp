@@ -46,6 +46,7 @@ router.route('/events')
 		event.type = req.body.type;
 		event.location = req.body.location;
 		event.date = req.body.date;
+		event.foodResponsible = req.body.foodResponsible;
 
 		event.save(function(err) {
 			if (err) 

@@ -38,6 +38,7 @@ public class ServerCommunicator {
     private static final String DATABASE_TYPE_FIELD = "type";
     private static final String DATABASE_LOCATION_FIELD = "location";
     private static final String DATABASE_DATE_FIELD = "date";
+    private static final String DATABASE_FOOD_RESPONSIBLE_FIELD = "foodResponsible";
 
 
     private ServerCommunicator() {
@@ -122,8 +123,16 @@ public class ServerCommunicator {
                 String type = eventJson.getString(DATABASE_TYPE_FIELD);
                 String location = eventJson.getString(DATABASE_LOCATION_FIELD);
                 String date = eventJson.getString(DATABASE_DATE_FIELD);
+
+                // extract food responsible (not a required field)
+                ArrayList<String> foodResponsible = new ArrayList<>();
+                JSONArray foodResponsibleJson = eventJson.getJSONArray(
+                        DATABASE_FOOD_RESPONSIBLE_FIELD);
+                for (int j = 0; j < foodResponsibleJson.length(); j++) {
+                    foodResponsible.add(foodResponsibleJson.getString(j));
+                }
                 Event event = new Event(Event.EventType.valueOf(type),
-                        new Date(Long.parseLong(date)), location, databaseId);
+                        new Date(Long.parseLong(date)), location, databaseId, foodResponsible);
                 events.add(event);
             } catch (JSONException e) {
                 Log.w(TAG, "Were not able to parse json item since one or more of the required " +

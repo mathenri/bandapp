@@ -47,7 +47,6 @@
             android:ems="10"
             android:hint="@string/location_edit_text"
             android:inputType="textShortMessage">
-            <requestFocus />
         </EditText>
 
         <!-- Time and Date -->
@@ -97,18 +96,35 @@
             android:layout_below="@id/timeLabel"
             android:text="@string/choose_time" />
 
-        <EditText
-            android:id="@+id/durationEditText"
+        <LinearLayout
+            android:id="@+id/addFikaResponsibleLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/typeGroup"
-            android:layout_marginTop="14dp"
-            android:ems="10"
-            android:hint="@string/location_edit_text"
-            android:inputType="textShortMessage">
-            <requestFocus />
-        </EditText>
+            android:layout_below="@+id/datePickerButton"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/addFikaResponsibleEditText"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:hint="@string/add_fika_responsible_edit_text"
+                android:inputType="textShortMessage">
+            </EditText>
+
+            <Button
+                android:id="@+id/addFikaResponsibleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_add" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/fikaResponsibleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addFikaResponsibleLinearLayout"/>
 
         <!-- Buttons -->
 

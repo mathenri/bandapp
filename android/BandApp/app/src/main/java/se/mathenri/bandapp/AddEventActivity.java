@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,6 +39,7 @@ public class AddEventActivity extends AppCompatActivity {
 
     // declared static so that they can be accessed from the static picker-classes
     private static Calendar calendar;
+    private ArrayList<String> foodResponsible = new ArrayList<>();
 
     private ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
 
@@ -73,6 +75,19 @@ public class AddEventActivity extends AppCompatActivity {
             }
         });
 
+        final Button addFikaResponsible = (Button) findViewById(R.id.addFikaResponsibleButton);
+        addFikaResponsible.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText addFikaResponsibleEditText = (EditText) findViewById(
+                        R.id.addFikaResponsibleEditText);
+                foodResponsible.add(addFikaResponsibleEditText.getText().toString());
+                TextView fikaResponsibleTextView = (TextView) findViewById(
+                        R.id.fikaResponsibleTextView);
+                fikaResponsibleTextView.setText(TextUtils.join("\n", foodResponsible));
+            }
+        });
+
         final Button timePickerButton = (Button) findViewById(R.id.timePickerButton);
         timePickerButton.setOnClickListener(new OnClickListener() {
 
@@ -99,10 +114,7 @@ public class AddEventActivity extends AppCompatActivity {
                         Event.EventType.REHEARSAL : Event.EventType.CONCERT);
                 Date date = calendar.getTime();
                 String location = locationEditText.getText().toString();
-
-//                Intent data = new Event(type, date, location).toIntent();
-//                setResult(Activity.RESULT_OK, data);
-                new AddEventTask().execute(new Event(type, date, location, null));
+                new AddEventTask().execute(new Event(type, date, location, null, foodResponsible));
                 finish();
             }
         });

@@ -5,7 +5,7 @@
     <string name="rehearsal_radio_button">Rehearsal</string>
     <string name="concert_radio_button">Concert</string>
     <string name="location_edit_text">Enter location...</string>
-    <string name="time_and_date_label">Start time</string>
+    <string name="time_and_date_label">Time</string>
     <string name="end_time_label">End time</string>
     <string name="no_date_set">No date set</string>
     <string name="no_time_set">No time set</string>
@@ -25,4 +25,5 @@
     <string name="add_user_name_label">Add a new user name:</string>
     <string name="edit_user_name_label">Edit user name:</string>
     <string name="title_activity_event_manager">EventManagerActivity</string>
+    <string name="add_fika_responsible_edit_text">Add fika responsible</string>
 </resources>

@@ -2,6 +2,7 @@ package se.mathenri.bandapp;
 
 import android.content.Intent;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,20 +29,22 @@ public class Event {
     private static final String DATE_KEY = "date";
     private static final String LOCATION_KEY = "location";
     private static final String DATABASE_ID_KEY = "id";
+    private static final String FOOD_RESPONSIBLE_KEY = "foodResponsible";
 
     private String dataBaseId;
     private EventType type;
     private Date date;
     private String location;
-    private List<String> fikaResponsible = new ArrayList<>();
-    private List<String> prayerReponsible = new ArrayList<>();
+    private ArrayList<String> foodResponsible = new ArrayList<>();
     private List<String> absent = new ArrayList<>();
 
-    public Event(EventType type, Date date, String location, String dataBaseId) {
+    public Event(EventType type, Date date, String location, String dataBaseId,
+                 ArrayList<String> foodResponsible) {
         this.dataBaseId = dataBaseId;
         this.type = type;
         this.date = date;
         this.location = location;
+        this.foodResponsible = foodResponsible;
     }
 
     /*
@@ -52,6 +55,8 @@ public class Event {
         this.type = (EventType) intent.getSerializableExtra(Event.TYPE_KEY);
         this.date = new Date(intent.getLongExtra(Event.DATE_KEY, -1));
         this.location = intent.getStringExtra(Event.LOCATION_KEY);
+        this.foodResponsible = (ArrayList<String>) intent.getSerializableExtra(
+                Event.FOOD_RESPONSIBLE_KEY);
     }
 
     // Encapsulates the Event in an Intent object and returns it
@@ -61,6 +66,7 @@ public class Event {
         intent.putExtra(Event.TYPE_KEY, this.type);
         intent.putExtra(Event.DATE_KEY, this.date.getTime());
         intent.putExtra(Event.LOCATION_KEY, this.location);
+        intent.putStringArrayListExtra(Event.FOOD_RESPONSIBLE_KEY, foodResponsible);
         return intent;
     }
 
@@ -69,15 +75,14 @@ public class Event {
         jsonObject.put(Event.TYPE_KEY, this.type.toString());
         jsonObject.put(Event.DATE_KEY, this.date.getTime()+"");
         jsonObject.put(Event.LOCATION_KEY, this.location);
+
+        JSONArray fikaResponsiblesJson = new JSONArray();
+        for (String user : foodResponsible) {
+            fikaResponsiblesJson.put(user);
+        }
+        jsonObject.put(Event.FOOD_RESPONSIBLE_KEY, fikaResponsiblesJson);
+
         return jsonObject.toString();
-    }
-
-    public void addFikaResponsible(String person) {
-        fikaResponsible.add(person);
-    }
-
-    public void addPrayerResponsible(String person) {
-        prayerReponsible.add(person);
     }
 
     public void addAbsent(String person) {
@@ -107,5 +112,9 @@ public class Event {
         } else {
             return dataBaseId;
         }
+    }
+
+    public List<String> getFoodResponsible() {
+        return foodResponsible;
     }
 }
