@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">BandApp</string>
     <string name="add_new_event_string">Add new event...</string>
-    <string name="add_event_type_label">Event Type</string>
+    <string name="add_event_type_label">Select event type</string>
+    <string name="add_event_location_label">Select event location</string>
     <string name="rehearsal_radio_button">Rehearsal</string>
     <string name="concert_radio_button">Concert</string>
     <string name="location_edit_text">Enter location...</string>
-    <string name="time_and_date_label">Time</string>
+    <string name="time_and_date_label">Select time and date for event</string>
     <string name="end_time_label">End time</string>
     <string name="no_date_set">No date set</string>
     <string name="no_time_set">No time set</string>
