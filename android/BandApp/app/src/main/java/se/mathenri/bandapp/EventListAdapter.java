@@ -8,11 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -31,12 +32,14 @@ public class EventListAdapter extends BaseAdapter {
     public void add(Event event)
     {
         events.add(event);
+        Collections.sort(this.events, new EventDateComparator());
         notifyDataSetChanged();
     }
 
     public void add(List<Event> events) {
         if (events != null) {
             this.events.addAll(events);
+            Collections.sort(this.events, new EventDateComparator());
         }
         notifyDataSetChanged();
     }
@@ -96,8 +99,7 @@ public class EventListAdapter extends BaseAdapter {
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.BELOW, R.id.eventListItemAbsent);
-            params.bottomMargin = 6;
-            params.topMargin = 3;
+            params.bottomMargin = 3;
             foodResponsibleTextView.setText(
                     "Food: " + TextUtils.join(", ", event.getFoodResponsible()));
             foodResponsibleTextView.setTextSize(12);
@@ -107,5 +109,12 @@ public class EventListAdapter extends BaseAdapter {
         }
 
         return eventLayout;
+    }
+
+    private class EventDateComparator implements Comparator<Event> {
+        @Override
+        public int compare(Event e1, Event e2) {
+            return e1.getDate().compareTo(e2.getDate());
+        }
     }
 }

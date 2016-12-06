@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -83,14 +84,18 @@ public class Event {
         jsonObject.put(Event.LOCATION_KEY, this.location);
 
         JSONArray foodResponsiblesJson = new JSONArray();
-        for (String user : foodResponsible) {
-            foodResponsiblesJson.put(user);
+        if (foodResponsible != null) {
+            for (String user : foodResponsible) {
+                foodResponsiblesJson.put(user);
+            }
         }
         jsonObject.put(Event.FOOD_RESPONSIBLE_KEY, foodResponsiblesJson);
 
         JSONArray absentJson = new JSONArray();
-        for (String user : absent) {
-            absentJson.put(user);
+        if (absent != null) {
+            for (String user : absent) {
+                absentJson.put(user);
+            }
         }
         jsonObject.put(Event.ABSENT_KEY, absentJson);
 

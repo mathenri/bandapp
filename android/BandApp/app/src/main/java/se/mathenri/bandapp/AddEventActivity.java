@@ -129,7 +129,7 @@ public class AddEventActivity extends AppCompatActivity {
             try {
                 serverCommunicator.addEvent(params[0]);
             } catch (Exception e) {
-                Log.e(TAG, "Failed to add event to server! Exception: " + e);
+                Log.e(TAG, "Failed to add event to server! Exception: " + Log.getStackTraceString(e));
             }
             return null;
         }
