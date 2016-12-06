@@ -1,29 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/eventListItem"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/eventListItemType"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:textSize="18sp"
+        android:textStyle="bold">
     </TextView>
 
     <TextView
         android:id="@+id/eventListItemDate"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/eventListItemType"
+        android:textSize="16sp"
+        android:layout_marginTop="3dip" />
 
     <TextView
         android:id="@+id/eventListItemLocation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventListItemType"
+        android:layout_toRightOf="@+id/eventListItemDate"
+        android:textSize="16sp"
+        android:layout_marginTop="3dip"
+        android:layout_marginLeft="10dip"/>
 
     <TextView
         android:id="@+id/eventListItemAbsent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventListItemDate"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:layout_marginTop="3dip"/>
 
-</LinearLayout>
+    <!-- Rightend Arrow -->
+    <ImageView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chevron_right_black_18dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

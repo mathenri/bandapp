@@ -1,6 +1,8 @@
 package se.mathenri.bandapp;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,16 +65,21 @@ public class EventListAdapter extends BaseAdapter {
         Event event = events.get(position);
 
         // create list view
-        LinearLayout eventLayout = (LinearLayout) convertView;
+        RelativeLayout eventLayout = (RelativeLayout) convertView;
         if (eventLayout == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            eventLayout = (LinearLayout) layoutInflater.inflate(R.layout.event_list_item, null);
+            eventLayout = (RelativeLayout) layoutInflater.inflate(R.layout.event_list_item, null);
         }
 
         // fill in data
         TextView typeView = (TextView) eventLayout.findViewById(R.id.eventListItemType);
         typeView.setText(event.getType().toString());
+        if (event.getType() == Event.EventType.CONCERT) {
+            typeView.setTextColor(ContextCompat.getColor(context, R.color.colorConcert));
+        } else {
+            typeView.setTextColor(ContextCompat.getColor(context, R.color.colorRehearsal));
+        }
 
         TextView dateView = (TextView) eventLayout.findViewById(R.id.eventListItemDate);
         dateView.setText(event.getDateString());
@@ -85,12 +92,18 @@ public class EventListAdapter extends BaseAdapter {
 
         if (!event.getFoodResponsible().isEmpty()) {
             TextView foodResponsibleTextView = new TextView(context);
-            foodResponsibleTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.BELOW, R.id.eventListItemAbsent);
+            params.bottomMargin = 6;
+            params.topMargin = 3;
             foodResponsibleTextView.setText(
                     "Food: " + TextUtils.join(", ", event.getFoodResponsible()));
-            LinearLayout layout = (LinearLayout) eventLayout.findViewById(R.id.eventListItem);
-            layout.addView(foodResponsibleTextView);
+            foodResponsibleTextView.setTextSize(12);
+            foodResponsibleTextView.setTypeface(null, Typeface.ITALIC);
+            RelativeLayout layout = (RelativeLayout) eventLayout.findViewById(R.id.eventListItem);
+            layout.addView(foodResponsibleTextView, params);
         }
 
         return eventLayout;

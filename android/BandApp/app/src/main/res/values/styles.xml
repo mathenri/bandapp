@@ -17,6 +17,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="BandAppThemeIndigo" parent="Theme.AppCompat.Light.NoActionBar" />
+    <style name="BandAppThemeIndigo" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorAccent">@color/colorRehearsal</item>
+    </style>
 
 </resources>

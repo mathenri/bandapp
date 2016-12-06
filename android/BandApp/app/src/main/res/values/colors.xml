@@ -3,4 +3,6 @@
     <color name="colorPrimary">#2196f3</color>
     <color name="colorPrimaryDark">#1976d2</color>
     <color name="colorAccent">#40c4ff</color>
+    <color name="colorRehearsal">#536dfe</color>
+    <color name="colorConcert">#aa00ff</color>
 </resources>
