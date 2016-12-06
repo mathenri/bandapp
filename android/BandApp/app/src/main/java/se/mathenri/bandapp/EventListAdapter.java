@@ -80,6 +80,9 @@ public class EventListAdapter extends BaseAdapter {
         TextView locationView = (TextView) eventLayout.findViewById(R.id.eventListItemLocation);
         locationView.setText(event.getLocation());
 
+        TextView absentTextView = (TextView) eventLayout.findViewById(R.id.eventListItemAbsent);
+        absentTextView.setText("Absent: " + event.getAbsent().size()+"");
+
         if (!event.getFoodResponsible().isEmpty()) {
             TextView foodResponsibleTextView = new TextView(context);
             foodResponsibleTextView.setLayoutParams(new LinearLayout.LayoutParams(

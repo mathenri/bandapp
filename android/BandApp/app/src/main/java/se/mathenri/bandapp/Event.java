@@ -22,29 +22,32 @@ public class Event {
         REHEARSAL, CONCERT
     }
 
-    private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm");
 
     // keys used to identify event fields when encapsulated in an Intent
-    private static final String TYPE_KEY = "type";
-    private static final String DATE_KEY = "date";
-    private static final String LOCATION_KEY = "location";
-    private static final String DATABASE_ID_KEY = "id";
-    private static final String FOOD_RESPONSIBLE_KEY = "foodResponsible";
+    public static final String TYPE_KEY = "type";
+    public static final String DATE_KEY = "date";
+    public static final String LOCATION_KEY = "location";
+    public static final String DATABASE_ID_KEY = "_id";
+    public static final String FOOD_RESPONSIBLE_KEY = "foodResponsible";
+    public static final String ABSENT_KEY = "absent";
 
     private String dataBaseId;
     private EventType type;
     private Date date;
     private String location;
     private ArrayList<String> foodResponsible = new ArrayList<>();
-    private List<String> absent = new ArrayList<>();
+    private ArrayList<String> absent = new ArrayList<>();
 
     public Event(EventType type, Date date, String location, String dataBaseId,
-                 ArrayList<String> foodResponsible) {
+                 ArrayList<String> foodResponsible, ArrayList absent) {
         this.dataBaseId = dataBaseId;
         this.type = type;
         this.date = date;
         this.location = location;
         this.foodResponsible = foodResponsible;
+        this.absent = absent;
     }
 
     /*
@@ -57,6 +60,8 @@ public class Event {
         this.location = intent.getStringExtra(Event.LOCATION_KEY);
         this.foodResponsible = (ArrayList<String>) intent.getSerializableExtra(
                 Event.FOOD_RESPONSIBLE_KEY);
+        this.absent = (ArrayList<String>) intent.getSerializableExtra(Event.ABSENT_KEY);
+
     }
 
     // Encapsulates the Event in an Intent object and returns it
@@ -67,6 +72,7 @@ public class Event {
         intent.putExtra(Event.DATE_KEY, this.date.getTime());
         intent.putExtra(Event.LOCATION_KEY, this.location);
         intent.putStringArrayListExtra(Event.FOOD_RESPONSIBLE_KEY, foodResponsible);
+        intent.putStringArrayListExtra(Event.ABSENT_KEY, absent);
         return intent;
     }
 
@@ -76,11 +82,17 @@ public class Event {
         jsonObject.put(Event.DATE_KEY, this.date.getTime()+"");
         jsonObject.put(Event.LOCATION_KEY, this.location);
 
-        JSONArray fikaResponsiblesJson = new JSONArray();
+        JSONArray foodResponsiblesJson = new JSONArray();
         for (String user : foodResponsible) {
-            fikaResponsiblesJson.put(user);
+            foodResponsiblesJson.put(user);
         }
-        jsonObject.put(Event.FOOD_RESPONSIBLE_KEY, fikaResponsiblesJson);
+        jsonObject.put(Event.FOOD_RESPONSIBLE_KEY, foodResponsiblesJson);
+
+        JSONArray absentJson = new JSONArray();
+        for (String user : absent) {
+            absentJson.put(user);
+        }
+        jsonObject.put(Event.ABSENT_KEY, absentJson);
 
         return jsonObject.toString();
     }
@@ -117,4 +129,6 @@ public class Event {
     public List<String> getFoodResponsible() {
         return foodResponsible;
     }
+
+    public ArrayList<String> getAbsent() { return absent; }
 }

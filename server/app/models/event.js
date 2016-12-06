@@ -7,7 +7,8 @@ var EventSchema = new Schema({
 	type: String,
 	location: String,
 	date: String,
-	foodResponsible: [String]
+	foodResponsible: [String],
+	absent: [String]
 });
 
 module.exports = mongoose.model('Event', EventSchema);

@@ -114,7 +114,8 @@ public class AddEventActivity extends AppCompatActivity {
                         Event.EventType.REHEARSAL : Event.EventType.CONCERT);
                 Date date = calendar.getTime();
                 String location = locationEditText.getText().toString();
-                new AddEventTask().execute(new Event(type, date, location, null, foodResponsible));
+                new AddEventTask().execute(new Event(type, date, location, null, foodResponsible,
+                        null));
                 finish();
             }
         });

@@ -1,6 +1,7 @@
 package se.mathenri.bandapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +12,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.view.View.OnClickListener;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class ViewEventActivity extends AppCompatActivity {
 
@@ -56,6 +61,35 @@ public class ViewEventActivity extends AppCompatActivity {
             LinearLayout layout = (LinearLayout) findViewById(R.id.activity_view_event);
             layout.addView(foodResponsibleTextView);
         }
+
+        TextView absentTextView = (TextView) findViewById(R.id.view_event_absent);
+        if (event.getAbsent().isEmpty()) {
+            absentTextView.setText("Absent: None");
+        } else {
+            absentTextView.setText("Absent:\n" + TextUtils.join("\n", event.getAbsent()));
+        }
+
+        Button reportAbsenceButton = (Button) findViewById(R.id.report_absence_button);
+        reportAbsenceButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
+                String userName = settings.getString(
+                        AddUserNameActivity.USERNAME_PREFERENCE_KEY, null);
+                if (!event.getAbsent().contains(userName)) {
+                    event.addAbsent(userName);
+                    try {
+                        new UpdateEventTask().execute(event);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Unable to update event! Exception: " + e);
+                    }
+                    finish();
+                } else {
+                    Log.w(TAG, "Could not report absence! User already in absent-list");
+                    // TODO: view message
+                }
+            }
+        });
     }
 
     @Override
@@ -87,6 +121,20 @@ public class ViewEventActivity extends AppCompatActivity {
                 serverCommunicator.deleteEvent(params[0]);
             } catch (Exception e) {
                 Log.e(TAG, "Failed to add event to server! Exception: " + e);
+            }
+            return null;
+        }
+    }
+
+    // queries the server for events and populates this activity's listview
+    private class UpdateEventTask extends AsyncTask<Event, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Event... params) {
+            try {
+                serverCommunicator.updateEvent(params[0]);
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to update event on server! Exception: " + e);
             }
             return null;
         }

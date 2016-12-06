@@ -47,6 +47,7 @@ router.route('/events')
 		event.location = req.body.location;
 		event.date = req.body.date;
 		event.foodResponsible = req.body.foodResponsible;
+		event.absent = req.body.absent;
 
 		event.save(function(err) {
 			if (err) 
@@ -86,6 +87,8 @@ router.route('/events/:event_id')
 			event.type = req.body.type;
 			event.location = req.body.location;
 			event.date = req.body.date;
+			event.foodResponsible = req.body.foodResponsible;
+			event.absent = req.body.absent;
 
 			event.save(function(err) {
 				if (err)

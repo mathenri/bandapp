@@ -30,16 +30,10 @@ public class ServerCommunicator {
     private static final String HTTP_METHOD_GET = "GET";
     private static final String HTTP_METHOD_POST = "POST";
     private static final String HTTP_METHOD_DELETE = "DELETE";
+    private static final String HTTP_METHOD_PUT = "PUT";
 
     private static final ServerCommunicator instance = new ServerCommunicator();
     private static final String TAG = ServerCommunicator.class.getSimpleName();
-
-    private static final String DATABASE_ID_FIELD = "_id";
-    private static final String DATABASE_TYPE_FIELD = "type";
-    private static final String DATABASE_LOCATION_FIELD = "location";
-    private static final String DATABASE_DATE_FIELD = "date";
-    private static final String DATABASE_FOOD_RESPONSIBLE_FIELD = "foodResponsible";
-
 
     private ServerCommunicator() {
         // private constructor to stop other classes from instantiating object (singelton)
@@ -67,6 +61,12 @@ public class ServerCommunicator {
         return createEventList(response);
     }
 
+    public void updateEvent(Event event) throws Exception {
+        Log.i(TAG, "Sending updateEvent request to server.");
+
+        sendRequest(HTTP_METHOD_PUT, SERVER_URL + "/" + event.getDataBaseId(), event.toJson());
+    }
+
     private String sendRequest(String method, String urlString, String content)
             throws IOException, UnexpectedResponseCodeException {
         URL url = new URL(urlString);
@@ -77,7 +77,7 @@ public class ServerCommunicator {
         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 
         conn.setDoInput(true);
-        if (method == HTTP_METHOD_POST) {
+        if (method.equals(HTTP_METHOD_POST) || method.equals(HTTP_METHOD_PUT)) {
             conn.setDoOutput(true);
         }
         conn.connect();
@@ -119,20 +119,28 @@ public class ServerCommunicator {
         for (int i = 0; i < eventsJson.length(); i++) {
             try {
                 JSONObject eventJson = eventsJson.getJSONObject(i);
-                String databaseId = eventJson.getString(DATABASE_ID_FIELD);
-                String type = eventJson.getString(DATABASE_TYPE_FIELD);
-                String location = eventJson.getString(DATABASE_LOCATION_FIELD);
-                String date = eventJson.getString(DATABASE_DATE_FIELD);
+                String databaseId = eventJson.getString(Event.DATABASE_ID_KEY);
+                String type = eventJson.getString(Event.TYPE_KEY);
+                String location = eventJson.getString(Event.LOCATION_KEY);
+                String date = eventJson.getString(Event.DATE_KEY);
 
                 // extract food responsible (not a required field)
                 ArrayList<String> foodResponsible = new ArrayList<>();
-                JSONArray foodResponsibleJson = eventJson.getJSONArray(
-                        DATABASE_FOOD_RESPONSIBLE_FIELD);
+                JSONArray foodResponsibleJson = eventJson.getJSONArray(Event.FOOD_RESPONSIBLE_KEY);
                 for (int j = 0; j < foodResponsibleJson.length(); j++) {
                     foodResponsible.add(foodResponsibleJson.getString(j));
                 }
+
+                // extract absent field
+                ArrayList<String> absent = new ArrayList<>();
+                JSONArray absentJson = eventJson.getJSONArray(Event.ABSENT_KEY);
+                for (int j = 0; j < absentJson.length(); j++) {
+                    absent.add(absentJson.getString(j));
+                }
+
                 Event event = new Event(Event.EventType.valueOf(type),
-                        new Date(Long.parseLong(date)), location, databaseId, foodResponsible);
+                        new Date(Long.parseLong(date)), location, databaseId, foodResponsible,
+                        absent);
                 events.add(event);
             } catch (JSONException e) {
                 Log.w(TAG, "Were not able to parse json item since one or more of the required " +
