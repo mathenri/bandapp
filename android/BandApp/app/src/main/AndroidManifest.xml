@@ -31,6 +31,10 @@
             android:name=".EditUserNameActivity"
             android:label="@string/title_activity_edit_user_name"
             android:parentActivityName=".EventListActivity" />
+        <activity
+            android:name=".EditEventActivity"
+            android:label="@string/title_activity_edit_event"
+            android:parentActivityName=".EventListActivity" />
     </application>
 
 </manifest>

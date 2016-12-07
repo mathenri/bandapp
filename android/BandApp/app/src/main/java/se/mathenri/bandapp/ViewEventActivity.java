@@ -108,6 +108,12 @@ public class ViewEventActivity extends AppCompatActivity {
                 new DeleteEventTask().execute(this.event);
                 finish();
 
+            case R.id.action_edit:
+                Intent startEditEventActivityIntent = new Intent(
+                        ViewEventActivity.this, EditEventActivity.class);
+                startActivity(startEditEventActivityIntent);
+                finish();
+
             default:
                 return super.onOptionsItemSelected(item);
         }
