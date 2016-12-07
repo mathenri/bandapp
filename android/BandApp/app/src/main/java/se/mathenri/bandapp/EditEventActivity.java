@@ -38,14 +38,7 @@ public class EditEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
-
-        // add toolbar
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_main);
-        setSupportActionBar(myToolbar);
-
-        // enable "up"-button
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        Utils.setupActionBarWithUpButton(this);
 
         Intent intent = getIntent();
         event = new Event(intent);

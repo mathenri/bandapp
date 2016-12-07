@@ -53,14 +53,7 @@ public class AddEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_event_activity);
-
-        // add toolbar
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_main);
-        setSupportActionBar(myToolbar);
-
-        // enable "up"-button
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        Utils.setupActionBarWithUpButton(this);
 
         calendar = Calendar.getInstance();
 
