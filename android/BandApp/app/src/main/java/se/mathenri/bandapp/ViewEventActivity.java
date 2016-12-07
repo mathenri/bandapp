@@ -24,7 +24,7 @@ public class ViewEventActivity extends AppCompatActivity {
     private static final String TAG = ViewEventActivity.class.getSimpleName();
 
     private ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
-    Event event;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,14 @@ public class ViewEventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         event = new Event(intent);
 
+        setDefaultViewValues();
+        setupListeners();
+    }
+
+    /*
+     * Populates all the view with their default values (from the event under edit)
+     */
+    private void setDefaultViewValues() {
         TextView typeTextView = (TextView) findViewById(R.id.view_event_type);
         typeTextView.setText(event.getType().toString());
 
@@ -69,7 +77,12 @@ public class ViewEventActivity extends AppCompatActivity {
         } else {
             absentTextView.setText(TextUtils.join("\n", event.getAbsent()));
         }
+    }
 
+    /*
+     * Sets up listeners on the activity's controls
+     */
+    private void setupListeners() {
         Button reportAbsenceButton = (Button) findViewById(R.id.report_absence_button);
         reportAbsenceButton.setOnClickListener(new OnClickListener() {
             @Override
