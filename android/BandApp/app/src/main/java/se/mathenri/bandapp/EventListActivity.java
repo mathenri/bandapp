@@ -1,6 +1,7 @@
 package se.mathenri.bandapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +15,14 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class EventListActivity extends AppCompatActivity {
 
+    public static final String USERNAME_PREFERENCE_KEY = "username";
+
     private static final String TAG = EventListActivity.class.getSimpleName();
-
     private EventListAdapter adapter;
-
     private ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
 
     @Override
@@ -45,6 +48,17 @@ public class EventListActivity extends AppCompatActivity {
                 startActivity(startViewEventActivityIntent);
             }
         });
+
+        // if the username is not set
+        SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
+        String username = settings.getString(USERNAME_PREFERENCE_KEY, null);
+
+        // if no username has been set, let user du this in new activity
+        if (username == null) {
+            Intent startEditUserNameActivityIntent = new Intent(
+                    EventListActivity.this, EditUserNameActivity.class);
+            startActivity(startEditUserNameActivityIntent);
+        }
 
         new GetEventsTask().execute();
     }

@@ -75,7 +75,7 @@ public class ViewEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
                 String userName = settings.getString(
-                        AddUserNameActivity.USERNAME_PREFERENCE_KEY, null);
+                        EventListActivity.USERNAME_PREFERENCE_KEY, null);
                 if (!event.getAbsent().contains(userName)) {
                     event.addAbsent(userName);
                     try {

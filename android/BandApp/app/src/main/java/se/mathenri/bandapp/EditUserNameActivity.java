@@ -22,13 +22,15 @@ public class EditUserNameActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(myToolbar);
 
-        // enable "up"-button
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-
         SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
         String currentUserName = settings.getString(
-                AddUserNameActivity.USERNAME_PREFERENCE_KEY, null);
+                EventListActivity.USERNAME_PREFERENCE_KEY, null);
+
+        // enable "up"-button, only if there is already a username
+        if (currentUserName != null) {
+            ActionBar ab = getSupportActionBar();
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         TextView currentUserNameTextView = (TextView) findViewById(R.id.currentUserNameTextField);
         currentUserNameTextView.setText(currentUserName);
@@ -41,7 +43,7 @@ public class EditUserNameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(AddUserNameActivity.USERNAME_PREFERENCE_KEY,
+                editor.putString(EventListActivity.USERNAME_PREFERENCE_KEY,
                         userNameEditText.getText().toString());
                 editor.commit();
                 finish();

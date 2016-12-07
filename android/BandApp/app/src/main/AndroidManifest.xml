@@ -12,7 +12,13 @@
         android:theme="@style/BandAppThemeIndigo">
         <activity
             android:name=".EventListActivity"
-            android:label="@string/title_activity_event_list" />
+            android:label="@string/title_activity_event_list">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".AddEventActivity"
             android:label="@string/title_activity_add_event"
@@ -22,18 +28,9 @@
             android:label="@string/title_activity_view_event"
             android:parentActivityName=".EventListActivity" />
         <activity
-            android:name=".AddUserNameActivity"
-            android:label="@string/title_activity_add_user_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".EditUserNameActivity"
             android:label="@string/title_activity_edit_user_name"
-            />
+            android:parentActivityName=".EventListActivity" />
     </application>
 
 </manifest>
