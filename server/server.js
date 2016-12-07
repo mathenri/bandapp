@@ -113,11 +113,11 @@ router.route('/events/:event_id')
 app.use(expressWinston.logger({
 	transports: [
 		new winston.transports.Console({
-			json: true,
+			json: false,
 			colorize: true
 		})
 	],
-	meta: true, // log the meta data about the request
+	meta: false, // log the meta data about the request
 	expressFormat: true, // default message format
 	colorize: true, // colors on message
 }));
