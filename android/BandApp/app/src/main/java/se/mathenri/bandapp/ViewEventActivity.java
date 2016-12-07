@@ -54,19 +54,20 @@ public class ViewEventActivity extends AppCompatActivity {
         // add food responsible if there are any
         if (!event.getFoodResponsible().isEmpty()) {
             TextView foodResponsibleTextView = new TextView(this);
-            foodResponsibleTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            foodResponsibleTextView.setText(
-                    "Food: " + TextUtils.join(", ", event.getFoodResponsible()));
-            LinearLayout layout = (LinearLayout) findViewById(R.id.activity_view_event);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.topMargin = 2;
+            foodResponsibleTextView.setLayoutParams(params);
+            foodResponsibleTextView.setText(TextUtils.join("\n", event.getFoodResponsible()));
+            LinearLayout layout = (LinearLayout) findViewById(R.id.view_event_content_layout);
             layout.addView(foodResponsibleTextView);
         }
 
         TextView absentTextView = (TextView) findViewById(R.id.view_event_absent);
         if (event.getAbsent().isEmpty()) {
-            absentTextView.setText("Absent: None");
+            absentTextView.setText("None");
         } else {
-            absentTextView.setText("Absent:\n" + TextUtils.join("\n", event.getAbsent()));
+            absentTextView.setText(TextUtils.join("\n", event.getAbsent()));
         }
 
         Button reportAbsenceButton = (Button) findViewById(R.id.report_absence_button);

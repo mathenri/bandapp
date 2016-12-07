@@ -28,6 +28,7 @@
     <string name="title_activity_event_manager">EventManagerActivity</string>
     <string name="add_food_responsible_edit_text">Name</string>
     <string name="add_food_responsible_label">Add food responsible</string>
+    <string name="food_responsible_list_label">Food responsible</string>
     <string name="report_absence">Report absence</string>
-    <string name="absent_text">Absent: </string>
+    <string name="absent_text">Absent</string>
 </resources>
