@@ -31,10 +31,13 @@
             android:name=".EditUserNameActivity"
             android:label="@string/title_activity_edit_user_name"
             android:parentActivityName=".EventListActivity" />
+        <!--windowSoftInputMode ensures the keyboard will not show up automatically when opening the
+        activity-->
         <activity
             android:name=".EditEventActivity"
             android:label="@string/title_activity_edit_event"
-            android:parentActivityName=".EventListActivity" />
+            android:parentActivityName=".EventListActivity"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

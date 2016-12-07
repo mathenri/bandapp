@@ -106,13 +106,23 @@ public class Event {
         absent.add(person);
     }
 
+    public void removeAbsent(String person) { absent.remove(person); }
+
+    public void addFoodResponsible(String person) { foodResponsible.add(person); }
+
+    public void removeFoodResponsible(String person) { foodResponsible.remove(person); }
+
     public EventType getType() {
         return type;
     }
 
+    public void setType(EventType type) { this.type = type; }
+
     public Date getDate() {
         return date;
     }
+
+    public void setDate(Date date) { this.date = date; }
 
     public String getDateString() {
         return DEFAULT_DATE_FORMAT.format(date);
@@ -121,6 +131,8 @@ public class Event {
     public String getLocation() {
         return location;
     }
+
+    public void setLocation(String location) { this.location = location; }
 
     public String getDataBaseId() {
         if (dataBaseId == null) {

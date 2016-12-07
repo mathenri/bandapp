@@ -109,7 +109,9 @@ public class ViewEventActivity extends AppCompatActivity {
                 finish();
 
             case R.id.action_edit:
-                Intent startEditEventActivityIntent = new Intent(
+
+                Intent startEditEventActivityIntent = event.toIntent();
+                startEditEventActivityIntent.setClass(
                         ViewEventActivity.this, EditEventActivity.class);
                 startActivity(startEditEventActivityIntent);
                 finish();

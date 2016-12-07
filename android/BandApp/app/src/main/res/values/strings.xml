@@ -27,7 +27,7 @@
     <string name="action_edit">Edit</string>
     <string name="action_save">Save</string>
     <string name="action_cancel">Cancel</string>
-    <string name="action_edit_type">Edit type</string>
+    <string name="action_edit_type">Change type</string>
     <string name="action_edit_username">Edit username</string>
     <string name="add_user_name_label">Add a new user name:</string>
     <string name="edit_user_name_label">Edit user name:</string>
