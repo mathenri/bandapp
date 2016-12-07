@@ -26,7 +26,8 @@
     <string name="add_user_name_label">Add a new user name:</string>
     <string name="edit_user_name_label">Edit user name:</string>
     <string name="title_activity_event_manager">EventManagerActivity</string>
-    <string name="add_fika_responsible_edit_text">Add food responsible</string>
+    <string name="add_food_responsible_edit_text">Name</string>
+    <string name="add_food_responsible_label">Add food responsible</string>
     <string name="report_absence">Report absence</string>
     <string name="absent_text">Absent: </string>
 </resources>

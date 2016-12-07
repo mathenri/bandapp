@@ -6,4 +6,6 @@
     <dimen name="content_margin">16dp</dimen>
     <dimen name="add_event_section_margin">24dp</dimen>
     <dimen name="add_event_heading_text_size">18sp</dimen>
+    <dimen name="label_to_button_margin">6dp</dimen>
+    <dimen name="heading_to_control_margin">4dp</dimen>
 </resources>

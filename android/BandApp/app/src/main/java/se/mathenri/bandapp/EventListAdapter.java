@@ -7,9 +7,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +28,8 @@ public class EventListAdapter extends BaseAdapter {
 
     private Context context;
     private List<Event> events = new ArrayList<Event>();
+
+    private static int FOOD_RESPONSIBLE_TEXT_VIEW_ID = View.generateViewId();
 
     public EventListAdapter(Context context) {
         this.context = context;
@@ -73,6 +79,15 @@ public class EventListAdapter extends BaseAdapter {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
             eventLayout = (RelativeLayout) layoutInflater.inflate(R.layout.event_list_item, null);
+        } else {
+            // if we reuse list item, there is a possibility there was a food responsible text view
+            // added to it with text in it. we need to remove this or we might add a new
+            // food responsible text view over it later.
+            TextView foodResponsibleTextView = (TextView) eventLayout.findViewById(
+                    FOOD_RESPONSIBLE_TEXT_VIEW_ID);
+            if (foodResponsibleTextView != null) {
+                eventLayout.removeView(foodResponsibleTextView);
+            }
         }
 
         // fill in data
@@ -104,6 +119,7 @@ public class EventListAdapter extends BaseAdapter {
                     "Food: " + TextUtils.join(", ", event.getFoodResponsible()));
             foodResponsibleTextView.setTextSize(12);
             foodResponsibleTextView.setTypeface(null, Typeface.ITALIC);
+            foodResponsibleTextView.setId(FOOD_RESPONSIBLE_TEXT_VIEW_ID);
             RelativeLayout layout = (RelativeLayout) eventLayout.findViewById(R.id.eventListItem);
             layout.addView(foodResponsibleTextView, params);
         }

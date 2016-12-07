@@ -12,12 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.view.View.OnClickListener;
 import android.widget.TimePicker;
 
@@ -36,10 +38,12 @@ public class AddEventActivity extends AppCompatActivity {
     private EditText locationEditText;
     private static TextView dateView;
     private static TextView timeView;
+    TextView foodResponsibleTextView;
+    EditText foodResponsibleEditText;
 
     // declared static so that they can be accessed from the static picker-classes
     private static Calendar calendar;
-    private ArrayList<String> foodResponsible = new ArrayList<>();
+    private ArrayList<String> foodResponsibleList = new ArrayList<>();
 
     private ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
 
@@ -61,10 +65,15 @@ public class AddEventActivity extends AppCompatActivity {
         calendar = Calendar.getInstance();
 
         // get references to views
+        foodResponsibleTextView = (TextView) findViewById(R.id.foodResponsibleTextView);
+        foodResponsibleEditText = (EditText) findViewById(R.id.addFoodResponsibleEditText);
         rehearsalButton = (RadioButton) findViewById(R.id.rehearsalRadioButton);
         locationEditText = (EditText) findViewById(R.id.locationEditText);
         dateView = (TextView) findViewById(R.id.dateLabel);
         timeView = (TextView) findViewById(R.id.timeLabel);
+
+        dateView.setText(new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
+        timeView.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
 
         // define on click listeners
         final Button datePickerButton = (Button) findViewById(R.id.datePickerButton);
@@ -75,16 +84,11 @@ public class AddEventActivity extends AppCompatActivity {
             }
         });
 
-        final Button addFikaResponsible = (Button) findViewById(R.id.addFikaResponsibleButton);
-        addFikaResponsible.setOnClickListener(new OnClickListener() {
+        final Button addFoodResponsibleButton = (Button) findViewById(R.id.addFoodResponsibleButton);
+        addFoodResponsibleButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText addFikaResponsibleEditText = (EditText) findViewById(
-                        R.id.addFikaResponsibleEditText);
-                foodResponsible.add(addFikaResponsibleEditText.getText().toString());
-                TextView fikaResponsibleTextView = (TextView) findViewById(
-                        R.id.fikaResponsibleTextView);
-                fikaResponsibleTextView.setText(TextUtils.join("\n", foodResponsible));
+                addFoodResponsible();
             }
         });
 
@@ -94,6 +98,19 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showTimePickerDialog();
+            }
+        });
+
+        final EditText addFoodResponsibleEditText = (EditText) findViewById(
+                R.id.addFoodResponsibleEditText);
+        addFoodResponsibleEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    addFoodResponsible();
+                }
+                // return false to close keyboard when the user has pressed "Done"
+                return false;
             }
         });
 
@@ -114,7 +131,7 @@ public class AddEventActivity extends AppCompatActivity {
                         Event.EventType.REHEARSAL : Event.EventType.CONCERT);
                 Date date = calendar.getTime();
                 String location = locationEditText.getText().toString();
-                new AddEventTask().execute(new Event(type, date, location, null, foodResponsible,
+                new AddEventTask().execute(new Event(type, date, location, null, foodResponsibleList,
                         null));
                 finish();
             }
@@ -189,5 +206,11 @@ public class AddEventActivity extends AppCompatActivity {
     private void showTimePickerDialog() {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    private void addFoodResponsible() {
+        foodResponsibleList.add(foodResponsibleEditText.getText().toString());
+        foodResponsibleTextView.setText(TextUtils.join(", ", foodResponsibleList));
+        foodResponsibleEditText.setText(null);
     }
 }
