@@ -34,6 +34,10 @@ import java.util.Date;
 
 public class AddEventActivity extends AppCompatActivity {
 
+    private static final String TAG = AddEventActivity.class.getSimpleName();
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+
     private RadioButton rehearsalButton;
     private EditText locationEditText;
     private static TextView dateView;
@@ -41,13 +45,9 @@ public class AddEventActivity extends AppCompatActivity {
     TextView foodResponsibleTextView;
     EditText foodResponsibleEditText;
 
-    // declared static so that they can be accessed from the static picker-classes
     private static Calendar calendar;
     private ArrayList<String> foodResponsibleList = new ArrayList<>();
-
     private ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
-
-    private static final String TAG = AddEventActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,31 +57,31 @@ public class AddEventActivity extends AppCompatActivity {
 
         calendar = Calendar.getInstance();
 
-        // get references to views
+        setViewReferences();
+        setDefaultViewValues();
+        setupListeners();
+    }
+
+    private void setViewReferences() {
         foodResponsibleTextView = (TextView) findViewById(R.id.foodResponsibleTextView);
         foodResponsibleEditText = (EditText) findViewById(R.id.addFoodResponsibleEditText);
         rehearsalButton = (RadioButton) findViewById(R.id.rehearsalRadioButton);
         locationEditText = (EditText) findViewById(R.id.locationEditText);
+    }
+
+    private void setDefaultViewValues() {
         dateView = (TextView) findViewById(R.id.dateLabel);
         timeView = (TextView) findViewById(R.id.timeLabel);
+        dateView.setText(DATE_FORMAT.format(calendar.getTime()));
+        timeView.setText(TIME_FORMAT.format(calendar.getTime()));
+    }
 
-        dateView.setText(new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
-        timeView.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
-
-        // define on click listeners
+    private void setupListeners() {
         final Button datePickerButton = (Button) findViewById(R.id.datePickerButton);
         datePickerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDatePickerDialog();
-            }
-        });
-
-        final Button addFoodResponsibleButton = (Button) findViewById(R.id.addFoodResponsibleButton);
-        addFoodResponsibleButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addFoodResponsible();
             }
         });
 
@@ -91,6 +91,14 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showTimePickerDialog();
+            }
+        });
+
+        final Button addFoodResponsibleButton = (Button) findViewById(R.id.addFoodResponsibleButton);
+        addFoodResponsibleButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFoodResponsible();
             }
         });
 
@@ -164,9 +172,7 @@ public class AddEventActivity extends AppCompatActivity {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, monthOfYear);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateView.setText(dateFormat.format(calendar.getTime()));
+            dateView.setText(DATE_FORMAT.format(calendar.getTime()));
         }
     }
 
@@ -185,9 +191,7 @@ public class AddEventActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute);
-
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            timeView.setText(timeFormat.format(calendar.getTime()));
+            timeView.setText(TIME_FORMAT.format(calendar.getTime()));
         }
     }
 
@@ -200,7 +204,7 @@ public class AddEventActivity extends AppCompatActivity {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
     }
-
+    
     private void addFoodResponsible() {
         foodResponsibleList.add(foodResponsibleEditText.getText().toString());
         foodResponsibleTextView.setText(TextUtils.join(", ", foodResponsibleList));
