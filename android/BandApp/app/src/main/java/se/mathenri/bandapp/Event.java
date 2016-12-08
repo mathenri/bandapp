@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * Created by MattiasHe on 2016-11-29.
+ *
+ * This class models an Event.
  */
 
 public class Event {
@@ -26,7 +28,7 @@ public class Event {
     private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm");
 
-    // keys used to identify event fields when encapsulated in an Intent
+    // keys used to identify event fields when refering to them in Intent and Database contexts
     public static final String TYPE_KEY = "type";
     public static final String DATE_KEY = "date";
     public static final String LOCATION_KEY = "location";
@@ -77,6 +79,9 @@ public class Event {
         return intent;
     }
 
+    /*
+     * Creates a JSON string representing the Event object
+     */
     public String toJson() throws JSONException{
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(Event.TYPE_KEY, this.type.toString());
