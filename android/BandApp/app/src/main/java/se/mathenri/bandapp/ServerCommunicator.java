@@ -23,7 +23,9 @@ import java.util.List;
 
 public class ServerCommunicator {
 
-    private static final String SERVER_URL = "http://10.0.2.2:8080/api/events";
+    private static final String SERVER_URL = "http://10.0.2.2:8080/api/";
+    private static final String EVENTS_ROUTE = "events";
+    private static final String SONGS_ROUTE = "songs";
     private static final int READ_TIMEOUT = 10000;
     private static final int CONNECTION_TIMEOUT = 15000;
 
@@ -45,26 +47,34 @@ public class ServerCommunicator {
 
     public void addEvent(Event event) throws Exception {
         Log.i(TAG, "Sending addEvent() request to server.");
-        sendRequest(HTTP_METHOD_POST, SERVER_URL, event.toJson());
+        sendRequest(HTTP_METHOD_POST, SERVER_URL + EVENTS_ROUTE, event.toJson());
     }
 
     public void deleteEvent(Event event) throws Exception {
         Log.i(TAG, "Sending deleteEvent() request to server");
-        sendRequest(HTTP_METHOD_DELETE, SERVER_URL + "/" + event.getDataBaseId(), null);
+        sendRequest(HTTP_METHOD_DELETE, SERVER_URL + EVENTS_ROUTE + "/" + event.getDataBaseId(),
+                null);
     }
 
     public List<Event> getEvents() throws Exception {
         Log.i(TAG, "Sending getEvents() request to server.");
 
         // get data from server
-        String response = sendRequest(HTTP_METHOD_GET, SERVER_URL, null);
+        String response = sendRequest(HTTP_METHOD_GET, SERVER_URL + EVENTS_ROUTE, null);
         return createEventList(response);
+    }
+
+    public List<Song> getSongs() throws Exception {
+        Log.i(TAG, "Sending getSongs() request to server");
+        String response = sendRequest(HTTP_METHOD_GET, SERVER_URL + SONGS_ROUTE, null);
+        return createSongsList(response);
     }
 
     public void updateEvent(Event event) throws Exception {
         Log.i(TAG, "Sending updateEvent request to server.");
 
-        sendRequest(HTTP_METHOD_PUT, SERVER_URL + "/" + event.getDataBaseId(), event.toJson());
+        sendRequest(HTTP_METHOD_PUT, SERVER_URL  + EVENTS_ROUTE + "/" + event.getDataBaseId(),
+                event.toJson());
     }
 
     /*
@@ -125,7 +135,7 @@ public class ServerCommunicator {
     /*
      * Takes a list of Events in JSON format and transforms it to a java List of Event objects.
      */
-    private List<Event> createEventList(String eventsString) throws JSONException{
+    private List<Event> createEventList(String eventsString) throws JSONException {
         JSONArray eventsJson = new JSONArray(eventsString);
         List<Event> events = new ArrayList<>();
 
@@ -166,5 +176,34 @@ public class ServerCommunicator {
             }
         }
         return events;
+    }
+
+    /*
+     * Takes a list of Songs in JSON format and transforms it to a java List of Song objects.
+     */
+    public List<Song> createSongsList(String songsString) throws JSONException {
+        JSONArray songsJson = new JSONArray(songsString);
+        List<Song> songs = new ArrayList<>();
+
+        // for all the songs in the JSON
+        for (int i = 0; i < songsJson.length(); i++) {
+            try {
+
+                // extract fields
+                JSONObject songJson = songsJson.getJSONObject(i);
+                String songName = songJson.getString(Song.SONG_NAME_KEY);
+                String part = songJson.getString(Song.PART_KEY);
+                String fileName = songJson.getString(Song.FILE_NAME_KEY);
+
+                // create the Event object and add it to the Java List
+                Song song = new Song(songName, part, fileName);
+                songs.add(song);
+            } catch (JSONException e) {
+                Log.w(TAG, "Were not able to parse json item since one or more of the required " +
+                        "fields where missing! Discarding object. Exception: " + e);
+                continue;
+            }
+        }
+        return songs;
     }
 }
