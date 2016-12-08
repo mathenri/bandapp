@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ServerCommunicator {
 
-    private static final String SERVER_URL = "http://10.0.2.2:8080/api/";
+    public static final String SERVER_URL = "http://10.0.2.2:8080/api/";
     private static final String EVENTS_ROUTE = "events";
     private static final String SONGS_ROUTE = "songs";
     private static final int READ_TIMEOUT = 10000;

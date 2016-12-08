@@ -20,6 +20,8 @@
     <string name="title_activity_add_user_name">New user name</string>
     <string name="title_activity_edit_user_name">New user name</string>
     <string name="title_activity_edit_event">New user name</string>
+    <string name="title_activity_parts_list">Parts</string>
+    <string name="title_activity_display_sheet_music">Sheet music</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_add">Add</string>
     <string name="action_delete">Delete</string>

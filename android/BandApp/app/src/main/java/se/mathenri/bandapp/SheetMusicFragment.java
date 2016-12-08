@@ -1,11 +1,8 @@
 package se.mathenri.bandapp;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,19 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SheetMusicFragment extends ListFragment implements OnItemClickListener {
 
     private static final String TAG = SheetMusicFragment.class.getSimpleName();
+    public static final String SELECTED_SONGS_INTENT_KEY = "songs";
 
     private ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
-    private ArrayAdapter adapter;
+    private SongAdapter adapter;
+    private List<Song> allSongs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +34,7 @@ public class SheetMusicFragment extends ListFragment implements OnItemClickListe
         super.onActivityCreated(savedInstanceState);
 
         // setup adapter
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_2,
-                android.R.id.text1);
+        adapter = new SongAdapter(getActivity().getApplicationContext(), false);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
 
@@ -49,10 +44,17 @@ public class SheetMusicFragment extends ListFragment implements OnItemClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            Event eventToView = (Event) adapter.getItem(position);
-//            Intent startViewEventActivityIntent = eventToView.toIntent();
-//            startViewEventActivityIntent.setClass(getActivity(), ViewEventActivity.class);
-//            startActivity(startViewEventActivityIntent);
+        // start a new activity displaying the available parts of the song that was clicked
+        Song selectedSong = (Song) adapter.getItem(position);
+        ArrayList<Song> parts = new ArrayList<>();
+        for (Song song : allSongs) {
+            if (song.getSongName().equals(selectedSong.getSongName()))
+            parts.add(song);
+        }
+
+        Intent startPartsListActivityIntent = new Intent(getActivity(), PartsListActivity.class);
+        startPartsListActivityIntent.putParcelableArrayListExtra(SELECTED_SONGS_INTENT_KEY, parts);
+        startActivity(startPartsListActivityIntent);
     }
 
     // queries the server for songs and populates this fragment's listview
@@ -72,14 +74,18 @@ public class SheetMusicFragment extends ListFragment implements OnItemClickListe
 
         @Override
         protected void onPostExecute(List<Song> songs) {
-            // get unique song names and populate list
-            Set<String> songNames = new HashSet<>();
-            for (Song song : songs) {
-                songNames.add(song.getSongName());
+            allSongs = songs;
+
+            // get songs with unique song names and populate list
+            List<Song> songsWithUniqueSongNames = new ArrayList<>();
+            List<String> addedNames = new ArrayList<>();
+            for (Song song : allSongs) {
+                if (!addedNames.contains(song.getSongName())) {
+                    addedNames.add(song.getSongName());
+                    songsWithUniqueSongNames.add(song);
+                }
             }
-            adapter.addAll(songNames);
+            adapter.addAll(songsWithUniqueSongNames);
         }
-
-
     }
 }

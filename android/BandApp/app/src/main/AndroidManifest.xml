@@ -40,6 +40,14 @@
             android:label="@string/title_activity_edit_event"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".PartsListActivity"
+            android:label="@string/title_activity_parts_list"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".DisplaySheetMusicActivity"
+            android:parentActivityName=".PartsListActivity"
+            android:label="@string/title_activity_display_sheet_music"/>
     </application>
 
 </manifest>
