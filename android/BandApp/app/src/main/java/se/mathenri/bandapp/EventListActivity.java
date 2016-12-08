@@ -49,11 +49,9 @@ public class EventListActivity extends AppCompatActivity {
             }
         });
 
-        // if the username is not set
+        // if no username has been set, let user du this in new activity
         SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
         String username = settings.getString(USERNAME_PREFERENCE_KEY, null);
-
-        // if no username has been set, let user du this in new activity
         if (username == null) {
             Intent startEditUserNameActivityIntent = new Intent(
                     EventListActivity.this, EditUserNameActivity.class);

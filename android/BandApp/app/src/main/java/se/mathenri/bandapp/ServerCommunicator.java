@@ -67,8 +67,14 @@ public class ServerCommunicator {
         sendRequest(HTTP_METHOD_PUT, SERVER_URL + "/" + event.getDataBaseId(), event.toJson());
     }
 
+    /*
+     * Sends a HTTP request to a server defined by the urlString parameter. Returns the response
+     * from the server as a String.
+     */
     private String sendRequest(String method, String urlString, String content)
             throws IOException, UnexpectedResponseCodeException {
+
+        // set connection parameters
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(READ_TIMEOUT);
@@ -80,11 +86,11 @@ public class ServerCommunicator {
         if (method.equals(HTTP_METHOD_POST) || method.equals(HTTP_METHOD_PUT)) {
             conn.setDoOutput(true);
         }
+
         conn.connect();
 
+        // add content to http request
         if (content != null) {
-            // add content to http request
-
             Log.i(TAG, "Sending content to server: " + content);
             byte[] contentBytes = content.getBytes("UTF-8");
             OutputStream outputStream = conn.getOutputStream();
@@ -98,12 +104,15 @@ public class ServerCommunicator {
             throw new UnexpectedResponseCodeException(responseCode + "");
         }
 
+        // return the response from the server as a String
         InputStream responseInputStream = conn.getInputStream();
         return inputStreamToString(responseInputStream);
     }
 
+    /*
+     * Transforms an InputStream to a String
+     */
     private String inputStreamToString(InputStream is) throws IOException {
-        // input stream to JSONObject
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
         StringBuilder stringBuilder = new StringBuilder();
         String line;
@@ -113,11 +122,18 @@ public class ServerCommunicator {
         return stringBuilder.toString();
     }
 
+    /*
+     * Takes a list of Events in JSON format and transforms it to a java List of Event objects.
+     */
     private List<Event> createEventList(String eventsString) throws JSONException{
         JSONArray eventsJson = new JSONArray(eventsString);
         List<Event> events = new ArrayList<>();
+
+        // for all the events in the JSON
         for (int i = 0; i < eventsJson.length(); i++) {
             try {
+
+                // extract fields
                 JSONObject eventJson = eventsJson.getJSONObject(i);
                 String databaseId = eventJson.getString(Event.DATABASE_ID_KEY);
                 String type = eventJson.getString(Event.TYPE_KEY);
@@ -138,6 +154,7 @@ public class ServerCommunicator {
                     absent.add(absentJson.getString(j));
                 }
 
+                // create the Event object and add it to the Java List
                 Event event = new Event(Event.EventType.valueOf(type),
                         new Date(Long.parseLong(date)), location, databaseId, foodResponsible,
                         absent);

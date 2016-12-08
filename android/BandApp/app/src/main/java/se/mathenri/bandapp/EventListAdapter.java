@@ -108,6 +108,7 @@ public class EventListAdapter extends BaseAdapter {
         TextView absentTextView = (TextView) eventLayout.findViewById(R.id.eventListItemAbsent);
         absentTextView.setText("Absent: " + event.getAbsent().size()+"");
 
+        // add food responsible field if applicable
         if (!event.getFoodResponsible().isEmpty()) {
             TextView foodResponsibleTextView = new TextView(context);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
@@ -127,6 +128,9 @@ public class EventListAdapter extends BaseAdapter {
         return eventLayout;
     }
 
+    /*
+     * Comparator used to sort list items by date.
+     */
     private class EventDateComparator implements Comparator<Event> {
         @Override
         public int compare(Event e1, Event e2) {
