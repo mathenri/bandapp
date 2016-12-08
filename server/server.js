@@ -11,18 +11,23 @@ var express = require('express'),
 // setup body parser
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+// serve files from "public" directory
+app.use(express.static('public'))
+
 // setup database connection
 mongoose.connect('mongodb://localhost/band')
 
-var port = process.env.PORT || 8080;
-
+// database model
 var Event = require('./app/models/event');
+var Song = require('./app/models/song')
+
+var port = process.env.PORT || 8080;
 
 var router = express.Router();
 
 // this applies to all requests ('middleware')
 router.use(function(req, res, next) {
-	console.log('Request received.');
 	//TODO: Authentication?
 
 	// go to next routes, don't stop here..
@@ -31,15 +36,42 @@ router.use(function(req, res, next) {
 
 // test route to ensure everything is working
 router.get('/', function (req, res) {
-	res.json({ message: 'hurra! welcome to the api!'})
+	res.json({ message: 'Welcome to BandApp API!'})
 });
+
+router.route('/songs')
+
+	// create song database entry
+	.post(function(req, res) {
+
+		// create instance of the event model
+		var song = new Song();
+		song.songName = req.body.songName;
+		song.part = req.body.part;
+		song.fileName = req.body.fileName;
+
+		song.save(function(err) {
+			if (err) 
+				res.send(err);
+
+			res.json({ message: 'Song created!' });
+		});
+	})
+
+	// get all songs
+	.get(function(req, res) {
+		Song.find(function(err, songs) {
+			if (err)
+				res.send(err);
+
+			res.json(songs)
+		});
+	});
 
 router.route('/events')
 
 	// create event
 	.post(function(req, res) {
-		console.log('Adding new event to database: ');
-		console.dir(req.body);
 
 		// create instance of the event model
 		var event = new Event();
