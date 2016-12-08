@@ -11,8 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/BandAppThemeIndigo">
         <activity
-            android:name=".EventListActivity"
-            android:label="@string/title_activity_event_list">
+            android:name=".MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,22 +22,24 @@
         <activity
             android:name=".AddEventActivity"
             android:label="@string/title_activity_add_event"
-            android:parentActivityName=".EventListActivity" />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ViewEventActivity"
             android:label="@string/title_activity_view_event"
-            android:parentActivityName=".EventListActivity" />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".EditUserNameActivity"
             android:label="@string/title_activity_edit_user_name"
-            android:parentActivityName=".EventListActivity" />
-        <!--windowSoftInputMode ensures the keyboard will not show up automatically when opening the
-        activity-->
+            android:parentActivityName=".MainActivity" />
+        <!--
+        windowSoftInputMode ensures the keyboard will not show up automatically when opening the
+        activity
+        -->
         <activity
             android:name=".EditEventActivity"
             android:label="@string/title_activity_edit_event"
-            android:parentActivityName=".EventListActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

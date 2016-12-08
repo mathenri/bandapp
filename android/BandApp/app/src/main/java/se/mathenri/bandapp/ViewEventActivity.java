@@ -82,7 +82,7 @@ public class ViewEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
                 String userName = settings.getString(
-                        EventListActivity.USERNAME_PREFERENCE_KEY, null);
+                        MainActivity.USERNAME_PREFERENCE_KEY, null);
                 if (!event.getAbsent().contains(userName)) {
                     event.addAbsent(userName);
                     try {
@@ -113,6 +113,7 @@ public class ViewEventActivity extends AppCompatActivity {
             case R.id.action_delete:
                 new DeleteEventTask().execute(this.event);
                 finish();
+                return true;
 
             case R.id.action_edit:
 
@@ -121,6 +122,7 @@ public class ViewEventActivity extends AppCompatActivity {
                         ViewEventActivity.this, EditEventActivity.class);
                 startActivity(startEditEventActivityIntent);
                 finish();
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

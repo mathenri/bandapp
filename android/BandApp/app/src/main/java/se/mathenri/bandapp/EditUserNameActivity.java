@@ -24,7 +24,7 @@ public class EditUserNameActivity extends AppCompatActivity {
 
         SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
         String currentUserName = settings.getString(
-                EventListActivity.USERNAME_PREFERENCE_KEY, null);
+                MainActivity.USERNAME_PREFERENCE_KEY, null);
 
         // enable "up"-button, only if there is already a username
         if (currentUserName != null) {
@@ -43,7 +43,7 @@ public class EditUserNameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences settings = getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(EventListActivity.USERNAME_PREFERENCE_KEY,
+                editor.putString(MainActivity.USERNAME_PREFERENCE_KEY,
                         userNameEditText.getText().toString());
                 editor.commit();
                 finish();
