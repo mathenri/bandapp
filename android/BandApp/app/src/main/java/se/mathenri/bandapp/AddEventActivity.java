@@ -204,7 +204,7 @@ public class AddEventActivity extends AppCompatActivity {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
     }
-    
+
     private void addFoodResponsible() {
         foodResponsibleList.add(foodResponsibleEditText.getText().toString());
         foodResponsibleTextView.setText(TextUtils.join(", ", foodResponsibleList));

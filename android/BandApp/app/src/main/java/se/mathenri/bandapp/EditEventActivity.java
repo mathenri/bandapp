@@ -25,14 +25,24 @@ import java.util.Calendar;
 
 public class EditEventActivity extends AppCompatActivity {
 
-    private static Calendar calendar = Calendar.getInstance();
-    private Event event;
-    ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
-
     private static final String TAG = EditEventActivity.class.getSimpleName();
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
     private static TextView dateTextView;
     private static TextView timeTextView;
+    private TextView typeTextView;
+    private TextView absentTextView;
+    private EditText addAbsentEditText;
+    private EditText removeAbsentEditText;
+    private EditText addFoodResponsibleEditText;
+    private EditText removeFoodResponsibleText;
+    private EditText locationEditText;
+    private TextView foodResponsibleTextView;
+
+    private static Calendar calendar = Calendar.getInstance();
+    private Event event;
+    ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,36 +50,40 @@ public class EditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_event);
         Utils.setupActionBarWithUpButton(this);
 
+        // receive the event that was sent from the parent activity
         Intent intent = getIntent();
         event = new Event(intent);
 
-        // set field default values
-        final TextView typeTextView = (TextView) findViewById(R.id.edit_event_type);
-        typeTextView.setText(event.getType().toString());
+        setViewReferences();
+        setDefaultViewValues();
+        setupListeners();
+    }
 
-        dateTextView = (TextView) findViewById(R.id.edit_event_date);
-        dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd").format(event.getDate()));
-
-        timeTextView = (TextView) findViewById(R.id.edit_event_time);
-        timeTextView.setText(new SimpleDateFormat("HH:mm").format(event.getDate()));
-
-        final EditText locationEditText = (EditText) findViewById(R.id.edit_event_location);
-        locationEditText.setText(event.getLocation());
-
-        final TextView absentTextView = (TextView) findViewById(R.id.edit_event_absent);
-        absentTextView.setText(TextUtils.join("\n", event.getAbsent()));
-
-        final EditText addAbsentEditText = (EditText) findViewById(R.id.edit_event_add_absent);
-        final EditText removeAbsentEditText = (EditText) findViewById(R.id.edit_event_remove_absent);
-        final EditText addFoodResponsibleEditText = (EditText) findViewById(
+    private void setViewReferences() {
+        addAbsentEditText = (EditText) findViewById(R.id.edit_event_add_absent);
+        removeAbsentEditText = (EditText) findViewById(R.id.edit_event_remove_absent);
+        addFoodResponsibleEditText = (EditText) findViewById(
                 R.id.edit_event_add_food_responsible);
-        final EditText removeFoodResponsibleText = (EditText) findViewById(
+        removeFoodResponsibleText = (EditText) findViewById(
                 R.id.edit_event_remove_food_responsible);
+        typeTextView = (TextView) findViewById(R.id.edit_event_type);
+        dateTextView = (TextView) findViewById(R.id.edit_event_date);
+        timeTextView = (TextView) findViewById(R.id.edit_event_time);
+        locationEditText = (EditText) findViewById(R.id.edit_event_location);
+        absentTextView = (TextView) findViewById(R.id.edit_event_absent);
+        foodResponsibleTextView = (TextView) findViewById(R.id.edit_event_food_responsible_list);
+    }
 
-        final TextView foodResponsibleTextView = (TextView) findViewById(R.id.edit_event_food_responsible_list);
+    private void setDefaultViewValues() {
+        typeTextView.setText(event.getType().toString());
+        dateTextView.setText(DATE_FORMAT.format(event.getDate()));
+        timeTextView.setText(TIME_FORMAT.format(event.getDate()));
+        locationEditText.setText(event.getLocation());
+        absentTextView.setText(TextUtils.join("\n", event.getAbsent()));
         foodResponsibleTextView.setText(TextUtils.join("\n", event.getFoodResponsible()));
+    }
 
-        // set listeners
+    private void setupListeners() {
         Button changeTypeButton = (Button) findViewById(R.id.edit_event_type_button);
         changeTypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +173,6 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     private class UpdateEventTask extends AsyncTask<Event, Void, Void> {
-
         @Override
         protected Void doInBackground(Event... params) {
             try {
@@ -190,9 +203,7 @@ public class EditEventActivity extends AppCompatActivity {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, monthOfYear);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateTextView.setText(dateFormat.format(calendar.getTime()));
+            dateTextView.setText(DATE_FORMAT.format(calendar.getTime()));
         }
     }
 
@@ -211,9 +222,7 @@ public class EditEventActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute);
-
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            timeTextView.setText(timeFormat.format(calendar.getTime()));
+            timeTextView.setText(TIME_FORMAT.format(calendar.getTime()));
         }
     }
 }
