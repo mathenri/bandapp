@@ -21,13 +21,16 @@ public class PartsListActivity extends AppCompatActivity {
 
         Utils.setupActionBarWithUpButton(this);
 
+        // get the parts to display from parent activity and add to the list
         ArrayList<Song> parts = getIntent().getParcelableArrayListExtra(
                 SheetMusicFragment.SELECTED_SONGS_INTENT_KEY);
-        final SongAdapter adapter = new SongAdapter(this, true);
 
+        final SongAdapter adapter = new SongAdapter(this, true);
         final ListView listView = (ListView) findViewById(R.id.parts_list_view);
         listView.setAdapter(adapter);
         adapter.addAll(parts);
+
+        // if an item is clicked, start a new activity displaying the clicked sheet music
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,

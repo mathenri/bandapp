@@ -43,7 +43,8 @@
         <activity
             android:name=".PartsListActivity"
             android:label="@string/title_activity_parts_list"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".DisplaySheetMusicActivity"
             android:parentActivityName=".PartsListActivity"
