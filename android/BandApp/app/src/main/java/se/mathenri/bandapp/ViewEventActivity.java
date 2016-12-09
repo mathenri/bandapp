@@ -32,6 +32,9 @@ public class ViewEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_event);
         Utils.setupActionBarWithUpButton(this);
 
+        // when starting this activity it should slid in on top of the parent activity
+        overridePendingTransition(R.anim.rigth_slide_in, R.anim.stay);
+
         Intent intent = getIntent();
         event = new Event(intent);
 
@@ -123,9 +126,22 @@ public class ViewEventActivity extends AppCompatActivity {
                 finish();
                 return true;
 
+            case android.R.id.home:
+                // slide out child activity when pressing "up" button
+                finish();
+                overridePendingTransition(R.anim.stay, R.anim.rigth_slide_out);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // slide out child activity when pressing "back" button
+        overridePendingTransition(R.anim.stay, R.anim.rigth_slide_out);
     }
 
     // queries the server for events and populates this activity's listview

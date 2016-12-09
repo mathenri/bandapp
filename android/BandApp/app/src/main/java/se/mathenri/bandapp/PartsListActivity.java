@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -20,6 +21,9 @@ public class PartsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_parts_list);
 
         Utils.setupActionBarWithUpButton(this);
+
+        // when starting this activity it should slid in on top of the parent activity
+        overridePendingTransition(R.anim.rigth_slide_in, R.anim.stay);
 
         // get the parts to display from parent activity and add to the list
         ArrayList<Song> parts = getIntent().getParcelableArrayListExtra(
@@ -43,5 +47,26 @@ public class PartsListActivity extends AppCompatActivity {
                 startActivity(startDisplaySheetMusicActivityIntent);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // slide out child activity when pressing "up" button
+                finish();
+                overridePendingTransition(R.anim.stay, R.anim.rigth_slide_out);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // slide out child activity when pressing "back" button
+        overridePendingTransition(R.anim.stay, R.anim.rigth_slide_out);
     }
 }
