@@ -6,14 +6,15 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	mongoose = require('mongoose'),
 	winston = require('winston'),
-	expressWinston = require('express-winston');
+	expressWinston = require('express-winston')
+	path = require('path');
 
 // setup body parser
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // serve files from "public" directory
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')));
 
 // setup database connection
 mongoose.connect('mongodb://localhost/band')
@@ -146,7 +147,8 @@ app.use(expressWinston.logger({
 	transports: [
 		new winston.transports.Console({
 			json: false,
-			colorize: true
+			colorize: true,
+			timestamp: true
 		})
 	],
 	meta: false, // log the meta data about the request
