@@ -1,5 +1,7 @@
 package se.mathenri.bandapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -23,9 +25,12 @@ import java.util.List;
 
 public class ServerCommunicator {
 
-    public static final String SERVER_URL = "http://10.0.2.2:8080/api/";
+    private static final String SERVER_URL = "http://10.0.2.2:8080";
+    private static final String API_ROUTE = "api";
+    private static final String IMAGE_ROUTE = "images";
     private static final String EVENTS_ROUTE = "events";
     private static final String SONGS_ROUTE = "songs";
+
     private static final int READ_TIMEOUT = 10000;
     private static final int CONNECTION_TIMEOUT = 15000;
 
@@ -47,34 +52,43 @@ public class ServerCommunicator {
 
     public void addEvent(Event event) throws Exception {
         Log.i(TAG, "Sending addEvent() request to server.");
-        sendRequest(HTTP_METHOD_POST, SERVER_URL + EVENTS_ROUTE, event.toJson());
+        String url = SERVER_URL + "/" + API_ROUTE + "/" + EVENTS_ROUTE;
+        sendRequest(HTTP_METHOD_POST, url, event.toJson());
     }
 
     public void deleteEvent(Event event) throws Exception {
         Log.i(TAG, "Sending deleteEvent() request to server");
-        sendRequest(HTTP_METHOD_DELETE, SERVER_URL + EVENTS_ROUTE + "/" + event.getDataBaseId(),
-                null);
+        String url = SERVER_URL + "/" + API_ROUTE + "/" + EVENTS_ROUTE + "/" + event.getDataBaseId();
+        sendRequest(HTTP_METHOD_DELETE, url, null);
     }
 
     public List<Event> getEvents() throws Exception {
         Log.i(TAG, "Sending getEvents() request to server.");
 
         // get data from server
-        String response = sendRequest(HTTP_METHOD_GET, SERVER_URL + EVENTS_ROUTE, null);
+        String url = SERVER_URL + "/" + API_ROUTE + "/" + EVENTS_ROUTE;
+        String response = sendRequest(HTTP_METHOD_GET, url, null);
         return createEventList(response);
     }
 
     public List<Song> getSongs() throws Exception {
         Log.i(TAG, "Sending getSongs() request to server");
-        String response = sendRequest(HTTP_METHOD_GET, SERVER_URL + SONGS_ROUTE, null);
+        String url = SERVER_URL + "/" + API_ROUTE + "/" + SONGS_ROUTE;
+        String response = sendRequest(HTTP_METHOD_GET, url, null);
         return createSongsList(response);
     }
 
     public void updateEvent(Event event) throws Exception {
         Log.i(TAG, "Sending updateEvent request to server.");
+        String url = SERVER_URL + "/" + API_ROUTE + "/" + EVENTS_ROUTE + "/" + event.getDataBaseId();
+        sendRequest(HTTP_METHOD_PUT, url, event.toJson());
+    }
 
-        sendRequest(HTTP_METHOD_PUT, SERVER_URL  + EVENTS_ROUTE + "/" + event.getDataBaseId(),
-                event.toJson());
+    public Bitmap getImage(String imageFileName) throws Exception {
+        String url = SERVER_URL + "/" + IMAGE_ROUTE + "/" + imageFileName;
+        InputStream in = new URL(url).openStream();
+        Bitmap image = BitmapFactory.decodeStream(in);
+        return image;
     }
 
     /*

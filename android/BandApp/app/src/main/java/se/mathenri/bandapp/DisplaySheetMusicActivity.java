@@ -16,6 +16,9 @@ public class DisplaySheetMusicActivity extends AppCompatActivity {
 
     private ImageView imageView;
 
+    ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
+    private static final String TAG = EventListFragment.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,28 +28,31 @@ public class DisplaySheetMusicActivity extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.sheet_music_image_view);
 
+        // get image filename sent by parent activity
         Intent intent = getIntent();
         String imageFileName = intent.getStringExtra(Song.FILE_NAME_KEY);
+
+        // fetch image from server and display
         new GetPartTask().execute(imageFileName);
     }
 
+    /*
+     * Fetches an image from the server and displays it in this activity's image view
+     */
     private class GetPartTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
-            Bitmap picture = null;
-            String url = "http://10.0.2.2:8080/images/" + params[0];
+            Bitmap image = null;
             try {
-                InputStream in = new URL(url).openStream();
-                picture = BitmapFactory.decodeStream(in);
+                image = serverCommunicator.getImage(params[0]);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
+                Log.e(TAG, "Failed to get image from server! Exception: " + Log.getStackTraceString(e));
             }
-            return picture;
+            return image;
         }
 
-        protected void onPostExecute(Bitmap result) {
-            imageView.setImageBitmap(result);
+        protected void onPostExecute(Bitmap image) {
+            imageView.setImageBitmap(image);
         }
     }
 }
